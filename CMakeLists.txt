@@ -1,0 +1,144 @@
+cmake_minimum_required(VERSION 3.24)
+include(${CMAKE_CURRENT_BINARY_DIR}/local_conf.cmake OPTIONAL)
+
+include(FetchContent)
+FetchContent_Declare(
+    ccommon
+    GIT_REPOSITORY https://github.com/EddyTheCo/Common.git
+    GIT_TAG main
+)
+FetchContent_MakeAvailable(ccommon)
+version_from_git(
+    LOG       OFF
+    TIMESTAMP "%Y%m%d%H%M%S"
+)
+project(openMeteo VERSION ${VERSION} DESCRIPTION "openMeteo client library for REST API" LANGUAGES CXX)
+
+set(default_build_type "Release")
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
+    set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
+        STRING "Choose the type of build." FORCE)
+    # Set the possible values of build type for cmake-gui
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+        "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
+
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+include(GNUInstallDirs)
+
+
+find_package(Qt6 COMPONENTS Core Network Gui Quick ShaderTools)
+
+if (Qt6_FOUND)
+    qt_standard_project_setup()
+endif(Qt6_FOUND)
+
+add_library(OMClient src/omclient.cpp include/omclient.hpp)
+
+target_compile_definitions(OMClient PRIVATE WINDOWS_OMClient)
+
+
+if (Qt6_FOUND)
+    target_link_libraries(OMClient PUBLIC  Qt6::Core Qt6::Network)
+
+    qt6_add_qml_module(OMQml
+                    URI  OMQml
+                    VERSION 1.0
+                    SOURCES
+                    src/omqml.cpp include/omqml.hpp
+                    QML_FILES
+                    qml/CurrentWeather.qml
+                    qml/demo.qml
+                    RESOURCE_PREFIX
+                    "/esterVtech.com/imports"
+                    OUTPUT_TARGETS out_targets_var
+                    OUTPUT_DIRECTORY
+                    ${CMAKE_CURRENT_BINARY_DIR}/OMQml
+                    IMPORT_PATH ${QML_IMPORT_PATH}
+                    )
+                qt6_add_shaders(OMQml "esterVtech.com.imports.OMQml.shaders"
+                        BATCHABLE
+                        PRECOMPILE
+                        OPTIMIZED
+                        OUTPUT_TARGETS out_targets_var2
+                        PREFIX
+                        "/esterVtech.com/imports/OMQml"
+                        FILES
+                        "frag/CodeIcons.frag"
+                        )
+
+                qt_add_resources(OMQml "OMQml.fonts"
+                    PREFIX "/esterVtech.com/imports/OMQml"
+                    FILES
+                    "fonts/Mukta/Mukta-Bold.ttf"
+                    "fonts/Mukta/Mukta-ExtraLight.ttf"
+                )
+
+            target_link_libraries(OMQml PUBLIC Qt6::Gui Qt6::Quick)
+
+            target_compile_definitions(OMQml PRIVATE WINDOWS_OMQML)
+            target_include_directories(OMQml PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/omclient>")
+            target_link_libraries(OMQml PUBLIC  OMClient)
+
+
+            qt_add_executable(demo main.cpp)
+            target_link_libraries(demo PRIVATE Qt::Core Qt::Gui Qt::Qml Qt::Quick OMQml)
+endif(Qt6_FOUND)
+
+
+target_include_directories(OMClient PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/omclient>")
+
+install(TARGETS OMClient ${out_targets_var} OMQml EXPORT OMClientTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/omclient)
+
+install(EXPORT OMClientTargets
+    FILE OMClientTargets.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OMClient
+)
+include(CMakePackageConfigHelpers)
+# generate the config file that is includes the exports
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/OMClientConfig.cmake"
+    INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/OMClient"
+)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/OMClientConfigVersion.cmake"
+    VERSION ${VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/OMClientConfig.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/OMClientConfigVersion.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OMClient
+)
+export(EXPORT OMClientTargets
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/OMClientTargets.cmake"
+)
+
+
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    set(CPACK_PACKAGE_CONTACT "estervtech")	
+    include(CTest)
+    set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-v${SEMVER}-${CMAKE_SYSTEM_NAME}_${CMAKE_SYSTEM_VERSION}-${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_CXX_COMPILER_ID}")
+    if(NOT BUILD_SHARED_LIBS)
+        set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-static")
+    endif(NOT BUILD_SHARED_LIBS)
+    if(USE_THREADS)
+        set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-MThread")
+    endif(USE_THREADS)
+    include(CPack)
+endif()
+#if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+#    add_subdirectory(tests)
+#endif()
+if(BUILD_DOCS)
+    get_target_property(build_docs cmake_build_docs SOURCES)
+    include(${build_docs})
+endif()
