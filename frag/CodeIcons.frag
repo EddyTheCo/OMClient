@@ -1,5 +1,6 @@
 #version 440
 #define PI 3.1415926538
+#define LIGHTREP 9
 #define SUNCOLOR vec3(1.0, 1.0, 0.0)
 #define GRAYCLOUD vec3(0.5, 0.5, 0.5)
 #define WHITECLOUD vec3(0.95, 0.95, 0.95)
@@ -34,12 +35,11 @@ float sdOrientedBox( in vec2 p, in vec2 a, in vec2 b, float th )
           q = abs(q)-vec2(l,th)*0.5;
     return length(max(q,0.0)) + min(max(q.x,q.y),0.0);
 }
-float sunlight(vec2 uv, vec2 p,float dcenter,float width, float height,
-float rep,float blur)
+float sunlight(vec2 uv, vec2 p,float dcenter,float width, float height,int rep, float blur)
 {
     float angle=2.0*PI/rep;
     float f=0.0;
-    for(float a=0.0;a<rep;a++ )
+    for(int a=0;a<LIGHTREP;a++ )
     {
        f+=1.0-smoothstep(-blur,blur,
     sdOrientedBox(uv,p+dcenter*vec2(cos(angle*a),sin(angle*a)),
@@ -68,7 +68,7 @@ float cloud(vec2 uv, vec2 p,float width,float height,float blur)
     return clamp(f,0.0,1.0);
 }
 float sun(vec2 uv, vec2 p,float radius, float lightstart,
-float lightheight,float lightwidth,float lightnumber,float blur)
+float lightheight,float lightwidth,int lightnumber,float blur)
 {
     float f=Circle(uv,p,radius,blur);
     f+=sunlight(uv,p,lightstart,lightwidth,lightheight,lightnumber,0.01);
@@ -83,7 +83,7 @@ float moon(vec2 uv, vec2 p,float radius,float angle,float blur)
 vec4 code_0_am(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.0),0.3+0.007*sin(3.0*iTime),0.35,
-    0.15+0.01*sin(3.0*iTime),0.1,9.0,0.02);
+    0.15+0.01*sin(3.0*iTime),0.1,9,0.02);
     vec3 pict=SUNCOLOR*fsun;
     vec4 bcolor=texture(src, uv).rgba;
     vec4 color=mix(bcolor, vec4(pict,1.0), fsun);
@@ -102,7 +102,7 @@ vec4 code_0_pm(vec2 uv)
 vec4 code_1_am(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.17,0.10),0.2+0.007*sin(3.0*iTime),0.25,
-    0.08+0.007*sin(3.0*iTime),0.05,9.0,0.01);
+    0.08+0.007*sin(3.0*iTime),0.05,9,0.01);
     vec3 suncolor=SUNCOLOR*fsun;
     float fcloud=cloud(uv,vec2(0.0,-0.2)+
     vec2(0.01*sin(3.0*iTime),0.0),0.4,0.4,0.01);
@@ -128,7 +128,7 @@ vec4 code_1_pm(vec2 uv)
 vec4 code_2_am(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.17,0.10),0.2+0.007*sin(3.0*iTime),0.25,
-    0.08+0.007*sin(3.0*iTime),0.05,9.0,0.01);
+    0.08+0.007*sin(3.0*iTime),0.05,9,0.01);
     vec3 suncolor=SUNCOLOR*fsun;
     float fcloud=cloud(uv,vec2(-0.1,-0.2)+
     vec2(0.01*sin(3.0*iTime),0.0),0.3,0.3,0.01);
