@@ -35,11 +35,7 @@ Rectangle
         {
 	console.log("weather_code:",omdata.current_weather.weathercode);
             shader.code=omdata.current_weather.weathercode+0.5;
-            let tt=new Date(omdata.current_weather.time);
-            if(tt.getHours()>=18||tt.getHours()<5)
-            shader.am=0.5;
-            else
-                shader.am=1.5;
+            shader.is_day=omdata.current_weather.is_day+0.5;
             temp.text=(isNaN(Math.round(omdata.current_weather.temperature)))?"":
             (Math.round(omdata.current_weather.temperature)+"\u00b0")
         }
@@ -81,7 +77,7 @@ Rectangle
                     property var src:rectang;
                     property real iTime:0.0;
                     property real code:2.5;
-                    property real am:1.5;
+                    property real is_day:1.5;
                     property var pixelStep: Qt.vector2d(1/src.width, 1/src.height)
                     fragmentShader: "qrc:/esterVtech.com/imports/OMQml/frag/CodeIcons.frag.qsb"
                 }

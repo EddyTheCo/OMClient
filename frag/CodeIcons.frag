@@ -13,7 +13,7 @@ layout(std140, binding = 0) uniform buf {
         float qt_Opacity;
         vec2 pixelStep;
         float code;
-        float am;
+        float is_day;
         float iTime;
 };
 layout(binding = 1) uniform sampler2D src;
@@ -192,21 +192,21 @@ void main( void)
 
     if(code>0.0&&code<1.0)
     {
-        if(am>1.0)
+        if(is_day>1.0)
         fcolor=code_0_am(uv);
         else
         fcolor=code_0_pm(uv);
     }
     if(code>1.0&&code<2.0)
     {
-        if(am>1.0)
+        if(is_day>1.0)
         fcolor=code_1_am(uv);
         else
         fcolor=code_1_pm(uv);
     }
     if(code>2.0&&code<3.0)
     {
-        if(am>1.0)
+        if(is_day>1.0)
         fcolor=code_2_am(uv);
         else
         fcolor=code_2_pm(uv);
