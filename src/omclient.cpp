@@ -39,6 +39,7 @@ void OMResponse::fill()
     {
         QByteArray response_data = reply->readAll();
         auto data = (QJsonDocument::fromJson(response_data)).object();
+	qDebug()<<"data:"<<data;
         emit returned(data);
         reply->deleteLater();
     }

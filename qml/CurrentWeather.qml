@@ -33,6 +33,7 @@ Rectangle
         id:omdata
         onCurrent_weatherChanged:
         {
+	console.log("weather_code:",omdata.current_weather.weathercode);
             shader.code=omdata.current_weather.weathercode+0.5;
             let tt=new Date(omdata.current_weather.time);
             if(tt.getHours()>=18||tt.getHours()<5)
