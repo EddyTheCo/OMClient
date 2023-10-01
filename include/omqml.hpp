@@ -4,13 +4,9 @@
 #include<QJsonObject>
 #include <QtQml/qqmlregistration.h>
 #include <QtCore/QtGlobal>
-#if defined(WINDOWS_OMQML)
-# define ACCOU_EXPORT Q_DECL_EXPORT
-#else
-#define ACCOU_EXPORT Q_DECL_IMPORT
-#endif
 
-class ACCOU_EXPORT OMQMLData : public QObject
+
+class OMQML_EXPORT OMQMLData : public QObject
 {
     Q_OBJECT
 
