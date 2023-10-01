@@ -78,54 +78,51 @@ if (Qt6_FOUND)
 	target_compile_definitions(OMQml PRIVATE WINDOWS_OMQML)
 	target_include_directories(OMQml PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 		"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/omqml>")
+	install(TARGETS ${out_targets_var} ${out_targets_var2}  ${out_targets_var3} OMQml EXPORT OMQmlTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
+	install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/omqml)
+
+	install(EXPORT OMQmlTargets
+		FILE OMQmlTargets.cmake
+		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OMQml
+		)
+	include(CMakePackageConfigHelpers)
+	# generate the config file that is includes the exports
+	configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+		"${CMAKE_CURRENT_BINARY_DIR}/OMQmlConfig.cmake"
+		INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/OMQml"
+		)
+	write_basic_package_version_file(
+		"${CMAKE_CURRENT_BINARY_DIR}/OMQmlConfigVersion.cmake"
+		VERSION ${VERSION}
+		COMPATIBILITY SameMajorVersion
+		)
+	install(FILES
+		${CMAKE_CURRENT_BINARY_DIR}/OMQmlConfig.cmake
+		${CMAKE_CURRENT_BINARY_DIR}/OMQmlConfigVersion.cmake
+		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OMQml
+		)
+	export(EXPORT OMQmlTargets
+		FILE "${CMAKE_CURRENT_BINARY_DIR}/OMQmlTargets.cmake"
+		)
+
+
+	if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+		set(CPACK_PACKAGE_CONTACT "estervtech")
+		include(CTest)
+		set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-v${SEMVER}-${CMAKE_SYSTEM_NAME}_${CMAKE_SYSTEM_VERSION}-${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_CXX_COMPILER_ID}")
+		if(NOT BUILD_SHARED_LIBS)
+			set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-static")
+		endif(NOT BUILD_SHARED_LIBS)
+		if(USE_THREADS)
+			set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-MThread")
+		endif(USE_THREADS)
+		include(CPack)
+	endif()
 
 endif(Qt6_FOUND)
 
 
 
-install(TARGETS ${out_targets_var} ${out_targets_var2}  ${out_targets_var3} OMQml EXPORT OMQmlTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/omqml)
-
-install(EXPORT OMQmlTargets
-	FILE OMQmlTargets.cmake
-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OMQml
-	)
-include(CMakePackageConfigHelpers)
-# generate the config file that is includes the exports
-configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
-	"${CMAKE_CURRENT_BINARY_DIR}/OMQmlConfig.cmake"
-	INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/OMQml"
-	)
-write_basic_package_version_file(
-	"${CMAKE_CURRENT_BINARY_DIR}/OMQmlConfigVersion.cmake"
-	VERSION ${VERSION}
-	COMPATIBILITY SameMajorVersion
-	)
-install(FILES
-	${CMAKE_CURRENT_BINARY_DIR}/OMQmlConfig.cmake
-	${CMAKE_CURRENT_BINARY_DIR}/OMQmlConfigVersion.cmake
-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OMQml
-	)
-export(EXPORT OMQmlTargets
-	FILE "${CMAKE_CURRENT_BINARY_DIR}/OMQmlTargets.cmake"
-	)
-
-
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-	set(CPACK_PACKAGE_CONTACT "estervtech")
-	include(CTest)
-	set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-v${SEMVER}-${CMAKE_SYSTEM_NAME}_${CMAKE_SYSTEM_VERSION}-${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_CXX_COMPILER_ID}")
-	if(NOT BUILD_SHARED_LIBS)
-		set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-static")
-	endif(NOT BUILD_SHARED_LIBS)
-	if(USE_THREADS)
-		set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-MThread")
-	endif(USE_THREADS)
-	include(CPack)
-endif()
-#if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
-#    add_subdirectory(tests)
-#endif()
 if(BUILD_DOCS)
 	get_target_property(build_docs cmake_build_docs SOURCES)
 	include(${build_docs})
