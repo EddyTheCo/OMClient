@@ -69,7 +69,7 @@ Rectangle
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.minimumWidth: root.width*0.4
-                Layout.margins: 5
+                Layout.alignment: Qt.AlignTop|Qt.AlignHCenter
                 visible:root.conected
                 ShaderEffect {
                     id: shader
@@ -102,8 +102,9 @@ Rectangle
 
                 visible:root.conected
                 color:root.frontColor
-                horizontalAlignment:Text.AlignLeft
+                horizontalAlignment:Text.AlignHCenter
                 verticalAlignment:Text.AlignVCenter
+                Layout.alignment: Qt.AlignTop|Qt.AlignHCenter
             }
         }
         Label
@@ -118,7 +119,7 @@ Rectangle
             font:Qt.font({  family: lightfont.font.family,
                              weight: lightfont.font.weight ,
                              pointSize : 150});
-            Layout.alignment: Qt.AlignTop
+            Layout.alignment: Qt.AlignTop|Qt.AlignHCenter
 
             visible:root.conected
             color:root.frontColor
