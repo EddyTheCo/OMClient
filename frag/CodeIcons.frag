@@ -80,6 +80,19 @@ float moon(vec2 uv, vec2 p,float radius,float angle,float blur)
     f-=Circle(uv,p+0.6*radius*vec2(cos(angle),sin(angle)),radius,blur);
     return clamp(f,0.0,1.0);
 }
+float sdStar5(in vec2 p, in float r, in float rf)
+{
+    const vec2 k1 = vec2(0.809016994375, -0.587785252292);
+    const vec2 k2 = vec2(-k1.x,k1.y);
+    p.x = abs(p.x);
+    p -= 2.0*max(dot(k1,p),0.0)*k1;
+    p -= 2.0*max(dot(k2,p),0.0)*k2;
+    p.x = abs(p.x);
+    p.y -= r;
+    vec2 ba = rf*vec2(-k1.y,k1.x) - vec2(0,1);
+    float h = clamp( dot(p,ba)/dot(ba,ba), 0.0, r );
+    return length(p-ba*h) * sign(p.y*ba.x-p.x*ba.y);
+}
 vec4 code_0_am(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.0),0.3+0.007*sin(3.0*iTime),0.35,
@@ -93,10 +106,12 @@ vec4 code_0_pm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.0),0.4+0.007*sin(3.0*iTime),
     0.4+0.1*sin(3.0*iTime),0.01);
-    vec3 pict=SUNCOLOR*fsun;
+    float star1=1.0-smoothstep(-0.01,0.01,sdStar5(uv-vec2(-0.55,-0.2),0.1+0.01*sin(2.0*iTime),0.48));
+    float star2=1.0-smoothstep(-0.01,0.01,sdStar5(uv-vec2(0.2,0.35),0.05/(1.0+abs(sin(1.1*iTime))),0.48));
+    vec3 pict=SUNCOLOR*(fsun+star1+star2);
 
     vec4 bcolor=texture(src, uv).rgba;
-    vec4 color=mix(bcolor, vec4(pict,1.0), fsun);
+    vec4 color=mix(bcolor, vec4(pict,1.0), fsun+star1+star2);
     return color;
 }
 vec4 code_1_am(vec2 uv)
@@ -116,13 +131,15 @@ vec4 code_1_pm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.17,0.15),0.3+0.007*sin(3.0*iTime),
     0.6+0.1*sin(3.0*iTime),0.01);
-    vec3 suncolor=SUNCOLOR*fsun;
+    float star1=1.0-smoothstep(-0.01,0.01,sdStar5(uv-vec2(-0.35,-0.0),0.1+0.01*sin(2.0*iTime),0.48));
+    float star2=1.0-smoothstep(-0.01,0.01,sdStar5(uv-vec2(0.3,0.3),0.05/(1.0+abs(sin(1.1*iTime))),0.48));
+    vec3 suncolor=SUNCOLOR*(fsun+star1+star2);
     float fcloud=cloud(uv,vec2(0.0,-0.2)+
     vec2(0.01*sin(3.0*iTime),0.0),0.4,0.4,0.01);
     vec3 cloudcolor=WHITECLOUD*fcloud;
     vec3 pict= mix(suncolor,cloudcolor,fcloud);
     vec4 bcolor=texture(src, uv).rgba;
-    vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud+fsun));
+    vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud+fsun+star1+star2));
     return color;
 }
 vec4 code_2_am(vec2 uv)
@@ -151,7 +168,9 @@ vec4 code_2_pm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.17,0.15),0.3+0.007*sin(3.0*iTime),
     0.6+0.1*sin(3.0*iTime),0.01);
-    vec3 suncolor=SUNCOLOR*fsun;
+    float star1=1.0-smoothstep(-0.01,0.01,sdStar5(uv-vec2(-0.3,-0.0),0.1+0.01*sin(2.0*iTime),0.48));
+    float star2=1.0-smoothstep(-0.01,0.01,sdStar5(uv-vec2(0.3,0.3),0.05/(1.0+abs(sin(1.1*iTime))),0.48));
+    vec3 suncolor=SUNCOLOR*(fsun+star1+star2);
     float fcloud=cloud(uv,vec2(-0.1,-0.2)+
     vec2(0.01*sin(3.0*iTime),0.0),0.3,0.3,0.01);
     fcloud+=cloud(uv,vec2(0.3,-0.1)+
@@ -166,7 +185,7 @@ vec4 code_2_pm(vec2 uv)
     vec3 pict= mix(suncolor,cloudcolor,clamp(0.0,1.0,fcloud+fcloud2));
 
     vec4 bcolor=texture(src, uv).rgba;
-    vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud+fcloud2+fsun));
+    vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud+fcloud2+fsun+star1+star2));
     return color;
 }
 vec4 code_3(vec2 uv)

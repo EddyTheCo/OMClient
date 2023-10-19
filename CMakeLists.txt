@@ -49,10 +49,12 @@ if (Qt6_FOUND)
 		qml/CurrentWeather.qml
 		RESOURCE_PREFIX
 		"/esterVtech.com/imports"
+		RESOURCES
+		"fonts/Mukta/Mukta-Bold.ttf"
+		"fonts/Mukta/Mukta-ExtraLight.ttf"
 		OUTPUT_TARGETS out_targets_var
 		OUTPUT_DIRECTORY
-		${CMAKE_CURRENT_BINARY_DIR}/OMQml
-		IMPORT_PATH ${QML_IMPORT_PATH}
+		${CMAKE_BINARY_DIR}/OMQml
 		)
 	qt6_add_shaders(OMQml "esterVtech.com.imports.OMQml.shaders"
 		BATCHABLE
@@ -65,22 +67,20 @@ if (Qt6_FOUND)
 		"frag/CodeIcons.frag"
 		)
 
-	qt_add_resources(OMQml "OMQml.fonts"
-		PREFIX "/esterVtech.com/imports/OMQml"
-		OUTPUT_TARGETS out_targets_var3
-		FILES
-		"fonts/Mukta/Mukta-Bold.ttf"
-		"fonts/Mukta/Mukta-ExtraLight.ttf"
-		)
-
 	target_link_libraries(OMQml PUBLIC Qt6::Gui Qt6::Quick Qt6::Core Qt6::Network)
 
 	target_compile_definitions(OMQml PRIVATE WINDOWS_OMQML)
 	target_include_directories(OMQml PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 		"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/omqml>")
-	install(TARGETS ${out_targets_var} ${out_targets_var2}  ${out_targets_var3} OMQml EXPORT OMQmlTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
-	install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/omqml)
+	install(TARGETS ${out_targets_var} ${out_targets_var2}  OMQml OMQmlplugin
+		EXPORT OMQmlTargets
+		DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
+	install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/
+		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/omqml)
+	install(DIRECTORY ${CMAKE_BINARY_DIR}/OMQml/
+		DESTINATION ${CMAKE_INSTALL_LIBDIR}/QMLPlugins/OMQml
+		)
 	install(EXPORT OMQmlTargets
 		FILE OMQmlTargets.cmake
 		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OMQml
@@ -104,8 +104,6 @@ if (Qt6_FOUND)
 	export(EXPORT OMQmlTargets
 		FILE "${CMAKE_CURRENT_BINARY_DIR}/OMQmlTargets.cmake"
 		)
-
-
 	if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 		set(CPACK_PACKAGE_CONTACT "estervtech")
 		include(CTest)
@@ -121,13 +119,7 @@ if (Qt6_FOUND)
 
 endif(Qt6_FOUND)
 
-
-
 if(BUILD_DOCS)
 	get_target_property(build_docs cmake_build_docs SOURCES)
 	include(${build_docs})
 endif()
-list(APPEND QML_IMPORT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/qml ${CMAKE_CURRENT_BINARY_DIR}/)
-list(REMOVE_DUPLICATES QML_IMPORT_PATH)
-set(QML_IMPORT_PATH ${QML_IMPORT_PATH} CACHE STRING "" FORCE)
-

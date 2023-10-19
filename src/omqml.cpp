@@ -1,13 +1,6 @@
 #include"omqml.hpp"
 #include<QTimer>
 
-namespace fooOMQml
-{
-QString fooPrint(void)
-{
-    return "https://forum.qt.io/post/762513";
-}
-}
 OMQMLData::OMQMLData(QObject *parent):QObject(parent),m_latitude(41.902229),m_longitude(12.458100),
     m_omclient(new OMClient(this)),m_temperature_unit("celsius")
 {
