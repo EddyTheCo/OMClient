@@ -5,11 +5,6 @@
 #include <QtQml/qqmlregistration.h>
 #include <QtCore/QtGlobal>
 
-//foo namespace to force the linker to link the backing library composed only of qml files
-namespace fooOMQml
-{
-QString fooPrint(void);
-};
 
 class OMQML_EXPORT OMQMLData : public QObject
 {
