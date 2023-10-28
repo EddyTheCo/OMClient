@@ -12,11 +12,6 @@ Rectangle
     property bool conected:(omdata.current_weather!==null)
     property color frontColor:"white"
 
-    Component.onCompleted:
-    {
-        omdata.get_current_weather();
-    }
-
     FontLoader {
         id: boldFont
         source: "qrc:/esterVtech.com/imports/OMQml/fonts/Mukta/Mukta-Bold.ttf"
