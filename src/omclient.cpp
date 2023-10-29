@@ -30,6 +30,7 @@ OMResponse*  OMClient::get_reply_rest(const QString& path,const QString& query)c
 }
 OMResponse::OMResponse(QNetworkReply *thereply):reply(thereply)
 {
+    reply->setParent(this);
     QObject::connect(reply, &QNetworkReply::finished,this, &OMResponse::fill);
     QObject::connect(reply, &QNetworkReply::errorOccurred,this, &OMResponse::error_found);
 }
@@ -39,14 +40,13 @@ void OMResponse::fill()
     {
         QByteArray response_data = reply->readAll();
         auto data = (QJsonDocument::fromJson(response_data)).object();
-	qDebug()<<"data:"<<data;
+        qDebug()<<"data:"<<data;
         emit returned(data);
         reply->deleteLater();
     }
     else
     {
         reply->deleteLater();
-        deleteLater();
     }
 
 }
