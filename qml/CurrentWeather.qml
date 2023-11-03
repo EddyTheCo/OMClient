@@ -35,7 +35,9 @@ Rectangle
         {
 	console.log("weather_code:",omdata.current_weather.weathercode);
             shader.code=(omdata.current_weather.weathercode<4)?omdata.current_weather.weathercode:0.0;
-            shader.is_day=omdata.current_weather.is_day;
+            console.log("shader.code:",shader.code);
+            shader.is_day=(omdata.current_weather.is_day)?omdata.current_weather.is_day:1.0;
+            console.log("shader.is_day:",shader.is_day);
             temp.text=(isNaN(Math.round(omdata.current_weather.temperature)))?"":
             (Math.round(omdata.current_weather.temperature)+"\u00b0")
         }
@@ -46,7 +48,7 @@ Rectangle
         onTriggered:
         {
             let cday=new Date();
-            time.text = cday.getMonth()+1+"/"+cday.getDate()+"   "+cday.getHours()+":"+cday.getMinutes();
+            time.text = cday.getMonth()+1+"/"+cday.getDate()+"   "+cday.getHours()+":"+((cday.getMinutes()<10)?"0":"")+cday.getMinutes();
         }
     }
 
