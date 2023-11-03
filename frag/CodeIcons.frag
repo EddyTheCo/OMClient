@@ -9,21 +9,21 @@ layout(location = 0) in vec2 qt_TexCoord0;
 layout(location = 0) out vec4 fragColor;
 
 layout(std140, binding = 0) uniform buf {
-        mat4 qt_Matrix;
-        float qt_Opacity;
-        vec2 pixelStep;
-        float code;
-        float is_day;
-        float iTime;
+    mat4 qt_Matrix;
+    float qt_Opacity;
+    vec2 pixelStep;
+    float code;
+    float is_day;
+    float iTime;
 };
 layout(binding = 1) uniform sampler2D src;
 
 
 float Circle(vec2 uv,vec2 p, float r,float blur)
 {
-        float d = length(uv-p);
-        float c = smoothstep(r,r-blur,d);
-        return c;
+    float d = length(uv-p);
+    float c = smoothstep(r,r-blur,d);
+    return c;
 }
 
 float sdOrientedBox( in vec2 p, in vec2 a, in vec2 b, float th )
@@ -31,8 +31,8 @@ float sdOrientedBox( in vec2 p, in vec2 a, in vec2 b, float th )
     float l = length(b-a);
     vec2  d = (b-a)/l;
     vec2  q = (p-(a+b)*0.5);
-          q = mat2(d.x,-d.y,d.y,d.x)*q;
-          q = abs(q)-vec2(l,th)*0.5;
+    q = mat2(d.x,-d.y,d.y,d.x)*q;
+    q = abs(q)-vec2(l,th)*0.5;
     return length(max(q,0.0)) + min(max(q.x,q.y),0.0);
 }
 float sunlight(vec2 uv, vec2 p,float dcenter,float width, float height,int rep, float blur)
@@ -41,9 +41,9 @@ float sunlight(vec2 uv, vec2 p,float dcenter,float width, float height,int rep, 
     float f=0.0;
     for(int a=0;a<LIGHTREP;a++ )
     {
-       f+=1.0-smoothstep(-blur,blur,
-    sdOrientedBox(uv,p+dcenter*vec2(cos(angle*a),sin(angle*a)),
-    p+(dcenter+height)*vec2(cos(angle*a),sin(angle*a)),width));
+        f+=1.0-smoothstep(-blur,blur,
+                          sdOrientedBox(uv,p+dcenter*vec2(cos(angle*a),sin(angle*a)),
+                                        p+(dcenter+height)*vec2(cos(angle*a),sin(angle*a)),width));
 
     }
 
@@ -62,13 +62,13 @@ float sdRoundedBox( in vec2 p, in vec2 b, in vec4 r )
 float cloud(vec2 uv, vec2 p,float width,float height,float blur)
 {
     float f=1.0-smoothstep(-blur,blur,
-    sdRoundedBox(uv-p,vec2(width,height/2.5),vec4(min(width,height)*0.4)));
+                           sdRoundedBox(uv-p,vec2(width,height/2.5),vec4(min(width,height)*0.4)));
     f+=Circle(uv,p+vec2(-width*0.33,height/2.1),width/2.2,blur);
     f+=Circle(uv,p+vec2(width*0.33,height/2.1),width/2.9,blur);
     return clamp(f,0.0,1.0);
 }
 float sun(vec2 uv, vec2 p,float radius, float lightstart,
-float lightheight,float lightwidth,int lightnumber,float blur)
+          float lightheight,float lightwidth,int lightnumber,float blur)
 {
     float f=Circle(uv,p,radius,blur);
     f+=sunlight(uv,p,lightstart,lightwidth,lightheight,lightnumber,0.01);
@@ -96,7 +96,7 @@ float sdStar5(in vec2 p, in float r, in float rf)
 vec4 code_0_am(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.0),0.3+0.007*sin(3.0*iTime),0.35,
-    0.15+0.01*sin(3.0*iTime),0.1,9,0.02);
+                   0.15+0.01*sin(3.0*iTime),0.1,9,0.02);
     vec3 pict=SUNCOLOR*fsun;
     vec4 bcolor=texture(src, uv).rgba;
     vec4 color=mix(bcolor, vec4(pict,1.0), fsun);
@@ -105,7 +105,7 @@ vec4 code_0_am(vec2 uv)
 vec4 code_0_pm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.0),0.4+0.007*sin(3.0*iTime),
-    0.4+0.1*sin(3.0*iTime),0.01);
+                    0.4+0.1*sin(3.0*iTime),0.01);
     float star1=1.0-smoothstep(-0.01,0.01,sdStar5(uv-vec2(-0.55,-0.2),0.1+0.01*sin(2.0*iTime),0.48));
     float star2=1.0-smoothstep(-0.01,0.01,sdStar5(uv-vec2(0.2,0.35),0.05/(1.0+abs(sin(1.1*iTime))),0.48));
     vec3 pict=SUNCOLOR*(fsun+star1+star2);
@@ -117,10 +117,10 @@ vec4 code_0_pm(vec2 uv)
 vec4 code_1_am(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.17,0.10),0.2+0.007*sin(3.0*iTime),0.25,
-    0.08+0.007*sin(3.0*iTime),0.05,9,0.01);
+                   0.08+0.007*sin(3.0*iTime),0.05,9,0.01);
     vec3 suncolor=SUNCOLOR*fsun;
     float fcloud=cloud(uv,vec2(0.0,-0.2)+
-    vec2(0.01*sin(3.0*iTime),0.0),0.4,0.4,0.01);
+                       vec2(0.01*sin(3.0*iTime),0.0),0.4,0.4,0.01);
     vec3 cloudcolor=WHITECLOUD*fcloud;
     vec3 pict = mix(suncolor,cloudcolor,fcloud);
     vec4 bcolor=texture(src, uv).rgba;
@@ -130,12 +130,12 @@ vec4 code_1_am(vec2 uv)
 vec4 code_1_pm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.17,0.15),0.3+0.007*sin(3.0*iTime),
-    0.6+0.1*sin(3.0*iTime),0.01);
+                    0.6+0.1*sin(3.0*iTime),0.01);
     float star1=1.0-smoothstep(-0.01,0.01,sdStar5(uv-vec2(-0.35,-0.0),0.1+0.01*sin(2.0*iTime),0.48));
     float star2=1.0-smoothstep(-0.01,0.01,sdStar5(uv-vec2(0.3,0.3),0.05/(1.0+abs(sin(1.1*iTime))),0.48));
     vec3 suncolor=SUNCOLOR*(fsun+star1+star2);
     float fcloud=cloud(uv,vec2(0.0,-0.2)+
-    vec2(0.01*sin(3.0*iTime),0.0),0.4,0.4,0.01);
+                       vec2(0.01*sin(3.0*iTime),0.0),0.4,0.4,0.01);
     vec3 cloudcolor=WHITECLOUD*fcloud;
     vec3 pict= mix(suncolor,cloudcolor,fcloud);
     vec4 bcolor=texture(src, uv).rgba;
@@ -145,16 +145,16 @@ vec4 code_1_pm(vec2 uv)
 vec4 code_2_am(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.17,0.10),0.2+0.007*sin(3.0*iTime),0.25,
-    0.08+0.007*sin(3.0*iTime),0.05,9,0.01);
+                   0.08+0.007*sin(3.0*iTime),0.05,9,0.01);
     vec3 suncolor=SUNCOLOR*fsun;
     float fcloud=cloud(uv,vec2(-0.1,-0.2)+
-    vec2(0.01*sin(3.0*iTime),0.0),0.3,0.3,0.01);
+                       vec2(0.01*sin(3.0*iTime),0.0),0.3,0.3,0.01);
     fcloud+=cloud(uv,vec2(0.3,-0.1)+
-    vec2(0.01*cos(3.0*iTime),0.0),0.3,0.3,0.01);
+                  vec2(0.01*cos(3.0*iTime),0.0),0.3,0.3,0.01);
     fcloud=clamp(0.0,1.0,fcloud);
 
     float fcloud2=cloud(uv,vec2(0.2,-0.2)+
-    vec2(0.02*cos(4.0*iTime),0.0),0.2,0.2,0.01);
+                        vec2(0.02*cos(4.0*iTime),0.0),0.2,0.2,0.01);
     vec3 cloudback=GRAYCLOUD*fcloud;
     vec3 cloudfront=WHITECLOUD*fcloud2;
     vec3 cloudcolor=mix(cloudback,cloudfront,fcloud2);
@@ -167,18 +167,18 @@ vec4 code_2_am(vec2 uv)
 vec4 code_2_pm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.17,0.15),0.3+0.007*sin(3.0*iTime),
-    0.6+0.1*sin(3.0*iTime),0.01);
+                    0.6+0.1*sin(3.0*iTime),0.01);
     float star1=1.0-smoothstep(-0.01,0.01,sdStar5(uv-vec2(-0.3,-0.0),0.1+0.01*sin(2.0*iTime),0.48));
     float star2=1.0-smoothstep(-0.01,0.01,sdStar5(uv-vec2(0.3,0.3),0.05/(1.0+abs(sin(1.1*iTime))),0.48));
     vec3 suncolor=SUNCOLOR*(fsun+star1+star2);
     float fcloud=cloud(uv,vec2(-0.1,-0.2)+
-    vec2(0.01*sin(3.0*iTime),0.0),0.3,0.3,0.01);
+                       vec2(0.01*sin(3.0*iTime),0.0),0.3,0.3,0.01);
     fcloud+=cloud(uv,vec2(0.3,-0.1)+
-    vec2(0.01*cos(3.0*iTime),0.0),0.3,0.3,0.01);
+                  vec2(0.01*cos(3.0*iTime),0.0),0.3,0.3,0.01);
     fcloud=clamp(0.0,1.0,fcloud);
 
     float fcloud2=cloud(uv,vec2(0.2,-0.2)+
-    vec2(0.02*cos(4.0*iTime),0.0),0.2,0.2,0.01);
+                        vec2(0.02*cos(4.0*iTime),0.0),0.2,0.2,0.01);
     vec3 cloudback=GRAYCLOUD*fcloud;
     vec3 cloudfront=WHITECLOUD*fcloud2;
     vec3 cloudcolor=mix(cloudback,cloudfront,fcloud2);
@@ -191,9 +191,9 @@ vec4 code_2_pm(vec2 uv)
 vec4 code_3(vec2 uv)
 {
     float fcloud=cloud(uv,vec2(-0.1,-0.2)+
-    vec2(0.01*sin(3.0*iTime),0.0),0.3,0.3,0.01);
+                       vec2(0.01*sin(3.0*iTime),0.0),0.3,0.3,0.01);
     fcloud+=cloud(uv,vec2(0.3,-0.1)+
-    vec2(0.01*cos(3.0*iTime),0.0),0.3,0.3,0.01);
+                  vec2(0.01*cos(3.0*iTime),0.0),0.3,0.3,0.01);
     fcloud=clamp(0.0,1.0,fcloud);
 
     vec3 pict=GRAYCLOUD*fcloud;
@@ -202,6 +202,10 @@ vec4 code_3(vec2 uv)
     vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud));
     return color;
 }
+float bump(float ref, float x)
+{
+    return step(ref-0.1,x)-step(ref+0.1,x);
+}
 void main( void)
 {
     vec2 uv=vec2(qt_TexCoord0.x*2.0-1.0,1.0-qt_TexCoord0.y*2.0);
@@ -209,32 +213,17 @@ void main( void)
 
     vec4 fcolor=vec4(0.0);
 
-    if(code>0.0&&code<1.0)
-    {
-        if(is_day>1.0)
-        fcolor=code_0_am(uv);
-        else
-        fcolor=code_0_pm(uv);
-    }
-    if(code>1.0&&code<2.0)
-    {
-        if(is_day>1.0)
-        fcolor=code_1_am(uv);
-        else
-        fcolor=code_1_pm(uv);
-    }
-    if(code>2.0&&code<3.0)
-    {
-        if(is_day>1.0)
-        fcolor=code_2_am(uv);
-        else
-        fcolor=code_2_pm(uv);
-    }
-    if(code>3.0&&code<4.0)
-    {
-        fcolor=code_3(uv);
-    }
 
+    fcolor+=code_0_am(uv)*bump(0.0,code)*bump(1.0,is_day);
+    fcolor+=code_0_pm(uv)*bump(0.0,code)*bump(0.0,is_day);
+
+    fcolor+=code_1_am(uv)*bump(1.0,code)*bump(1.0,is_day);
+    fcolor+=code_1_pm(uv)*bump(1.0,code)*bump(0.0,is_day);
+
+    fcolor+=code_2_am(uv)*bump(2.0,code)*bump(1.0,is_day);
+    fcolor+=code_2_pm(uv)*bump(2.0,code)*bump(0.0,is_day);
+
+    fcolor+=code_3(uv)*bump(3.0,code);
 
     fragColor = fcolor;
 
