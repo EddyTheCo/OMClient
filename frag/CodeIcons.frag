@@ -257,11 +257,10 @@ void main( void)
 
     vec4 fcolor=vec4(0.0);
 
-
+/*
     fcolor+=code_0_am(uv)*bump(0.0,code)*bump(1.0,is_day);
 
     fcolor+=code_0_pm(uv)*bump(0.0,code)*bump(0.0,is_day);
-
 
     fcolor+=code_1_am(uv)*bump(1.0,code)*bump(1.0,is_day);
 
@@ -270,7 +269,7 @@ void main( void)
     fcolor+=code_2_am(uv)*bump(2.0,code)*bump(1.0,is_day);
 
     fcolor+=code_2_pm(uv)*bump(2.0,code)*bump(0.0,is_day);
-
+*/
     fcolor+=code_3(uv)*bump(3.0,code);
 
     fragColor = fcolor;
