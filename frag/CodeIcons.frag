@@ -108,7 +108,7 @@ float sun(vec2 uv, vec2 p,float radius, float lightstart,
     f+=sunlight(uv,p,lightstart,lightwidth,lightheight,lightnumber,0.01);
     return clamp(f,0.0,1.0);
 }
-/*
+
 float moon(vec2 uv, vec2 p,float radius,float angle,float blur)
 {
     float f=Circle(uv,p,radius,blur);
@@ -128,7 +128,7 @@ float sdStar5(in vec2 p, in float r, in float rf)
     float h = clamp( dot(p,ba)/dot(ba,ba), 0.0, r );
     return length(p-ba*h) * sign(p.y*ba.x-p.x*ba.y);
 }
-*/
+
 vec4 code_0_am(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.0),0.3+0.007*sin(3.0*iTime),0.35,
@@ -138,7 +138,7 @@ vec4 code_0_am(vec2 uv)
     vec4 color=mix(bcolor, vec4(pict,1.0), fsun);
     return color;
 }
-/*
+
 vec4 code_0_pm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.0),0.4+0.007*sin(3.0*iTime),
@@ -151,6 +151,7 @@ vec4 code_0_pm(vec2 uv)
     vec4 color=mix(bcolor, vec4(pict,1.0), fsun+star1+star2);
     return color;
 }
+/*
 vec4 code_1_am(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.17,0.10),0.2+0.007*sin(3.0*iTime),0.25,
@@ -252,10 +253,11 @@ void main( void)
     vec4 fcolor=vec4(0.0);
 
 
-    fcolor+=code_0_am(uv);//*bump(0.0,code)*bump(1.0,is_day);
-    /*
-    fcolor+=code_0_pm(uv)*bump(0.0,code)*bump(0.0,is_day);
+    //fcolor+=code_0_am(uv)*bump(0.0,code)*bump(1.0,is_day);
 
+    fcolor+=code_0_pm(uv);//*bump(0.0,code)*bump(0.0,is_day);
+
+    /*
     fcolor+=code_1_am(uv)*bump(1.0,code)*bump(1.0,is_day);
     fcolor+=code_1_pm(uv)*bump(1.0,code)*bump(0.0,is_day);
 
