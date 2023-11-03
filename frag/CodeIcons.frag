@@ -229,7 +229,7 @@ vec4 code_2_pm(vec2 uv)
     vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud+fcloud2+fsun+star1+star2));
     return color;
 }
-/*
+
 vec4 code_3(vec2 uv)
 {
     float fcloud=cloud(uv,vec2(-0.1,-0.2)+
@@ -249,7 +249,7 @@ float bump(float ref, float x)
 {
     return step(ref-0.1,x)-step(ref+0.1,x);
 }
-*/
+
 void main( void)
 {
     vec2 uv=vec2(qt_TexCoord0.x*2.0-1.0,1.0-qt_TexCoord0.y*2.0);
@@ -268,9 +268,9 @@ void main( void)
     //fcolor+=code_1_pm(uv)*bump(1.0,code)*bump(0.0,is_day);
 
     //fcolor+=code_2_am(uv)*bump(2.0,code)*bump(1.0,is_day);
-    fcolor+=code_2_pm(uv);//*bump(2.0,code)*bump(0.0,is_day);
+    //fcolor+=code_2_pm(uv);*bump(2.0,code)*bump(0.0,is_day);
 
-    //fcolor+=code_3(uv)*bump(3.0,code);
+    fcolor+=code_3(uv)*bump(3.0,code);
 
     fragColor = fcolor;
 

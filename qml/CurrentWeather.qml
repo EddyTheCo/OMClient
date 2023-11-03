@@ -34,7 +34,7 @@ Rectangle
         onCurrent_weatherChanged:
         {
 	console.log("weather_code:",omdata.current_weather.weathercode);
-            shader.code=omdata.current_weather.weathercode;
+            //shader.code=omdata.current_weather.weathercode;
             shader.is_day=omdata.current_weather.is_day;
             temp.text=(isNaN(Math.round(omdata.current_weather.temperature)))?"":
             (Math.round(omdata.current_weather.temperature)+"\u00b0")
@@ -76,7 +76,7 @@ Rectangle
                     anchors.fill: rectang;
                     property var src:rectang;
                     property real iTime:0.0;
-                    property real code:2.0;
+                    property real code:3.0;
                     property real is_day:1.0;
                     property var pixelStep: Qt.vector2d(1/src.width, 1/src.height)
                     fragmentShader: "qrc:/esterVtech.com/imports/OMQml/frag/CodeIcons.frag.qsb"
