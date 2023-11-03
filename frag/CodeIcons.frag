@@ -39,15 +39,47 @@ float sunlight(vec2 uv, vec2 p,float dcenter,float width, float height,int rep, 
 {
     float angle=2.0*PI/rep;
     float f=0.0;
-    for(int a=0;a<LIGHTREP;a++ )
-    {
-        f+=1.0-smoothstep(-blur,blur,
-                          sdOrientedBox(uv,p+dcenter*vec2(cos(angle*a),sin(angle*a)),
-                                        p+(dcenter+height)*vec2(cos(angle*a),sin(angle*a)),width));
 
-    }
+    float a=0.0;
+    f+=1.0-smoothstep(-blur,blur,
+                      sdOrientedBox(uv,p+dcenter*vec2(cos(angle*a),sin(angle*a)),
+                                    p+(dcenter+height)*vec2(cos(angle*a),sin(angle*a)),width));
+    a=1.0;
+    f+=1.0-smoothstep(-blur,blur,
+                      sdOrientedBox(uv,p+dcenter*vec2(cos(angle*a),sin(angle*a)),
+                                    p+(dcenter+height)*vec2(cos(angle*a),sin(angle*a)),width));
 
+    a=2.0;
+    f+=1.0-smoothstep(-blur,blur,
+                      sdOrientedBox(uv,p+dcenter*vec2(cos(angle*a),sin(angle*a)),
+                                    p+(dcenter+height)*vec2(cos(angle*a),sin(angle*a)),width));
 
+    a=3.0;
+    f+=1.0-smoothstep(-blur,blur,
+                      sdOrientedBox(uv,p+dcenter*vec2(cos(angle*a),sin(angle*a)),
+                                    p+(dcenter+height)*vec2(cos(angle*a),sin(angle*a)),width));
+
+    a=4.0;
+    f+=1.0-smoothstep(-blur,blur,
+                      sdOrientedBox(uv,p+dcenter*vec2(cos(angle*a),sin(angle*a)),
+                                    p+(dcenter+height)*vec2(cos(angle*a),sin(angle*a)),width));
+
+    a=5.0;
+    f+=1.0-smoothstep(-blur,blur,
+                      sdOrientedBox(uv,p+dcenter*vec2(cos(angle*a),sin(angle*a)),
+                                    p+(dcenter+height)*vec2(cos(angle*a),sin(angle*a)),width));
+    a=6.0;
+    f+=1.0-smoothstep(-blur,blur,
+                      sdOrientedBox(uv,p+dcenter*vec2(cos(angle*a),sin(angle*a)),
+                                    p+(dcenter+height)*vec2(cos(angle*a),sin(angle*a)),width));
+    a=7.0;
+    f+=1.0-smoothstep(-blur,blur,
+                      sdOrientedBox(uv,p+dcenter*vec2(cos(angle*a),sin(angle*a)),
+                                    p+(dcenter+height)*vec2(cos(angle*a),sin(angle*a)),width));
+    a=8.0;
+    f+=1.0-smoothstep(-blur,blur,
+                      sdOrientedBox(uv,p+dcenter*vec2(cos(angle*a),sin(angle*a)),
+                                    p+(dcenter+height)*vec2(cos(angle*a),sin(angle*a)),width));
     return f;
 }
 
