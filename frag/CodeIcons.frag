@@ -165,7 +165,7 @@ vec4 code_1_am(vec2 uv)
     vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud+fsun));
     return color;
 }
-/*
+
 vec4 code_1_pm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.17,0.15),0.3+0.007*sin(3.0*iTime),
@@ -181,6 +181,7 @@ vec4 code_1_pm(vec2 uv)
     vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud+fsun+star1+star2));
     return color;
 }
+/*
 vec4 code_2_am(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.17,0.10),0.2+0.007*sin(3.0*iTime),0.25,
@@ -203,6 +204,7 @@ vec4 code_2_am(vec2 uv)
     vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud+fcloud2+fsun));
     return color;
 }
+*/
 vec4 code_2_pm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.17,0.15),0.3+0.007*sin(3.0*iTime),
@@ -227,6 +229,7 @@ vec4 code_2_pm(vec2 uv)
     vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud+fcloud2+fsun+star1+star2));
     return color;
 }
+/*
 vec4 code_3(vec2 uv)
 {
     float fcloud=cloud(uv,vec2(-0.1,-0.2)+
@@ -241,6 +244,7 @@ vec4 code_3(vec2 uv)
     vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud));
     return color;
 }
+
 float bump(float ref, float x)
 {
     return step(ref-0.1,x)-step(ref+0.1,x);
@@ -259,15 +263,14 @@ void main( void)
     //fcolor+=code_0_pm(uv)*bump(0.0,code)*bump(0.0,is_day);
 
 
-    fcolor+=code_1_am(uv);//*bump(1.0,code)*bump(1.0,is_day);
-    /*
-    fcolor+=code_1_pm(uv)*bump(1.0,code)*bump(0.0,is_day);
+    //fcolor+=code_1_am(uv)*bump(1.0,code)*bump(1.0,is_day);
 
-    fcolor+=code_2_am(uv)*bump(2.0,code)*bump(1.0,is_day);
-    fcolor+=code_2_pm(uv)*bump(2.0,code)*bump(0.0,is_day);
+    //fcolor+=code_1_pm(uv)*bump(1.0,code)*bump(0.0,is_day);
 
-    fcolor+=code_3(uv)*bump(3.0,code);
-    */
+    //fcolor+=code_2_am(uv)*bump(2.0,code)*bump(1.0,is_day);
+    fcolor+=code_2_pm(uv);//*bump(2.0,code)*bump(0.0,is_day);
+
+    //fcolor+=code_3(uv)*bump(3.0,code);
 
     fragColor = fcolor;
 
