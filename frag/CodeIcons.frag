@@ -259,9 +259,9 @@ void main( void)
 
 
     fcolor+=code_0_am(uv)*bump(0.0,code)*bump(1.0,is_day);
-/*
-    fcolor+=code_0_pm(uv)*bump(0.0,code)*bump(0.0,is_day);
 
+    fcolor+=code_0_pm(uv)*bump(0.0,code)*bump(0.0,is_day);
+/*
     fcolor+=code_1_am(uv)*bump(1.0,code)*bump(1.0,is_day);
 
     fcolor+=code_1_pm(uv)*bump(1.0,code)*bump(0.0,is_day);
