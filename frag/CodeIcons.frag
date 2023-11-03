@@ -26,7 +26,7 @@ float Circle(vec2 uv,vec2 p, float r,float blur)
     return c;
 }
 
-/*float sdOrientedBox( in vec2 p, in vec2 a, in vec2 b, float th )
+float sdOrientedBox( in vec2 p, in vec2 a, in vec2 b, float th )
 {
     float l = length(b-a);
     vec2  d = (b-a)/l;
@@ -91,6 +91,7 @@ float sdRoundedBox( in vec2 p, in vec2 b, in vec4 r )
     vec2 q = abs(p)-b+r.x;
     return min(max(q.x,q.y),0.0) + length(max(q,0.0)) - r.x;
 }
+/*
 float cloud(vec2 uv, vec2 p,float width,float height,float blur)
 {
     float f=1.0-smoothstep(-blur,blur,
@@ -99,6 +100,7 @@ float cloud(vec2 uv, vec2 p,float width,float height,float blur)
     f+=Circle(uv,p+vec2(width*0.33,height/2.1),width/2.9,blur);
     return clamp(f,0.0,1.0);
 }
+*/
 float sun(vec2 uv, vec2 p,float radius, float lightstart,
           float lightheight,float lightwidth,int lightnumber,float blur)
 {
@@ -106,6 +108,7 @@ float sun(vec2 uv, vec2 p,float radius, float lightstart,
     f+=sunlight(uv,p,lightstart,lightwidth,lightheight,lightnumber,0.01);
     return clamp(f,0.0,1.0);
 }
+/*
 float moon(vec2 uv, vec2 p,float radius,float angle,float blur)
 {
     float f=Circle(uv,p,radius,blur);
@@ -125,6 +128,7 @@ float sdStar5(in vec2 p, in float r, in float rf)
     float h = clamp( dot(p,ba)/dot(ba,ba), 0.0, r );
     return length(p-ba*h) * sign(p.y*ba.x-p.x*ba.y);
 }
+*/
 vec4 code_0_am(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.0),0.3+0.007*sin(3.0*iTime),0.35,
@@ -134,6 +138,7 @@ vec4 code_0_am(vec2 uv)
     vec4 color=mix(bcolor, vec4(pict,1.0), fsun);
     return color;
 }
+/*
 vec4 code_0_pm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.0),0.4+0.007*sin(3.0*iTime),
@@ -244,10 +249,11 @@ void main( void)
     vec2 uv=vec2(qt_TexCoord0.x*2.0-1.0,1.0-qt_TexCoord0.y*2.0);
     uv.x *= pixelStep.y/pixelStep.x;
 
-    vec4 fcolor=vec4(0.3,0.4,0.6,1.0)*Circle(uv,vec2(0.0), 0.2,0.01);
+    vec4 fcolor=vec4(0.0);
 
-/*
-    fcolor+=code_0_am(uv)*bump(0.0,code)*bump(1.0,is_day);
+
+    fcolor+=code_0_am(uv);//*bump(0.0,code)*bump(1.0,is_day);
+    /*
     fcolor+=code_0_pm(uv)*bump(0.0,code)*bump(0.0,is_day);
 
     fcolor+=code_1_am(uv)*bump(1.0,code)*bump(1.0,is_day);
@@ -257,7 +263,8 @@ void main( void)
     fcolor+=code_2_pm(uv)*bump(2.0,code)*bump(0.0,is_day);
 
     fcolor+=code_3(uv)*bump(3.0,code);
-*/
+    */
+
     fragColor = fcolor;
 
 }
