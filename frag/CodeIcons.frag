@@ -26,7 +26,7 @@ float Circle(vec2 uv,vec2 p, float r,float blur)
     return c;
 }
 
-float sdOrientedBox( in vec2 p, in vec2 a, in vec2 b, float th )
+/*float sdOrientedBox( in vec2 p, in vec2 a, in vec2 b, float th )
 {
     float l = length(b-a);
     vec2  d = (b-a)/l;
@@ -238,14 +238,15 @@ float bump(float ref, float x)
 {
     return step(ref-0.1,x)-step(ref+0.1,x);
 }
+*/
 void main( void)
 {
     vec2 uv=vec2(qt_TexCoord0.x*2.0-1.0,1.0-qt_TexCoord0.y*2.0);
     uv.x *= pixelStep.y/pixelStep.x;
 
-    vec4 fcolor=vec4(0.0);
+    vec4 fcolor=vec4(0.3,0.4,0.6,1.0)*Circle(uv,vec2(0.0), 0.2,0.01);
 
-
+/*
     fcolor+=code_0_am(uv)*bump(0.0,code)*bump(1.0,is_day);
     fcolor+=code_0_pm(uv)*bump(0.0,code)*bump(0.0,is_day);
 
@@ -256,7 +257,7 @@ void main( void)
     fcolor+=code_2_pm(uv)*bump(2.0,code)*bump(0.0,is_day);
 
     fcolor+=code_3(uv)*bump(3.0,code);
-
+*/
     fragColor = fcolor;
 
 }
