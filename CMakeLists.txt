@@ -64,6 +64,9 @@ if (Qt6_FOUND)
                 PREFIX
                 "/esterVtech.com/imports/OMQml"
                 FILES
+                "frag/code3.frag"
+                "frag/code2Am1.frag"
+                "frag/code2Am0.frag"
                 "frag/code1Am1.frag"
                 "frag/code1Am0.frag"
                 "frag/code0Am1.frag"
