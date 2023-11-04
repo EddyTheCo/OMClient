@@ -129,7 +129,7 @@ float sdStar5(in vec2 p, in float r, in float rf)
     return length(p-ba*h) * sign(p.y*ba.x-p.x*ba.y);
 }
 
-vec4 code_0_am(vec2 uv)
+vec4 codeZeroAm(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.0),0.3+0.007*sin(3.0*iTime),0.35,
                    0.15+0.01*sin(3.0*iTime),0.1,9,0.02);
@@ -139,7 +139,7 @@ vec4 code_0_am(vec2 uv)
     return color;
 }
 
-vec4 code_0_pm(vec2 uv)
+vec4 codeZeroPm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.0),0.4+0.007*sin(3.0*iTime),
                     0.4+0.1*sin(3.0*iTime),0.01);
@@ -152,7 +152,7 @@ vec4 code_0_pm(vec2 uv)
     return color;
 }
 
-vec4 code_1_am(vec2 uv)
+vec4 codeOneAm(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.17,0.10),0.2+0.007*sin(3.0*iTime),0.25,
                    0.08+0.007*sin(3.0*iTime),0.05,9,0.01);
@@ -166,7 +166,7 @@ vec4 code_1_am(vec2 uv)
     return color;
 }
 
-vec4 code_1_pm(vec2 uv)
+vec4 codeOnePm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.17,0.15),0.3+0.007*sin(3.0*iTime),
                     0.6+0.1*sin(3.0*iTime),0.01);
@@ -182,7 +182,7 @@ vec4 code_1_pm(vec2 uv)
     return color;
 }
 
-vec4 code_2_am(vec2 uv)
+vec4 codeTwoAm(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.17,0.10),0.2+0.007*sin(3.0*iTime),0.25,
                    0.08+0.007*sin(3.0*iTime),0.05,9,0.01);
@@ -205,7 +205,7 @@ vec4 code_2_am(vec2 uv)
     return color;
 }
 
-vec4 code_2_pm(vec2 uv)
+vec4 codeTwoPm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.17,0.15),0.3+0.007*sin(3.0*iTime),
                     0.6+0.1*sin(3.0*iTime),0.01);
@@ -230,7 +230,7 @@ vec4 code_2_pm(vec2 uv)
     return color;
 }
 
-vec4 code_3(vec2 uv)
+vec4 codeThree(vec2 uv)
 {
     float fcloud=cloud(uv,vec2(-0.1,-0.2)+
                        vec2(0.01*sin(3.0*iTime),0.0),0.3,0.3,0.01);
@@ -257,21 +257,21 @@ void main( void)
 
     vec4 fcolor=vec4(0.0);
 
-    fcolor+=code_0_am(uv)*bump(0.0,code)*bump(1.0,is_day)
-    +code_0_pm(uv)*bump(0.0,code)*bump(0.0,is_day);
+    fcolor+=codeZeroAm(uv)*bump(0.0,code)*bump(1.0,is_day)
+
+    //+codeZeroPm(uv)*bump(0.0,code)*bump(0.0,is_day);
 
 /*
-    fcolor+=code_1_am(uv)*bump(1.0,code)*bump(1.0,is_day);
+    fcolor+=codeOneAm(uv)*bump(1.0,code)*bump(1.0,is_day);
 
-    fcolor+=code_1_pm(uv)*bump(1.0,code)*bump(0.0,is_day);
+    fcolor+=codeOnePm(uv)*bump(1.0,code)*bump(0.0,is_day);
 
-    fcolor+=code_2_am(uv)*bump(2.0,code)*bump(1.0,is_day);
+    fcolor+=codeTwoAm(uv)*bump(2.0,code)*bump(1.0,is_day);
 
-    fcolor+=code_2_pm(uv)*bump(2.0,code)*bump(0.0,is_day);
-
-    fcolor+=code_3(uv)*bump(3.0,code);
+    fcolor+=codeTwoAm(uv)*bump(2.0,code)*bump(0.0,is_day);
 
 */
+    +codeThree(uv)*bump(3.0,code);
     fragColor = fcolor;
 
 }
