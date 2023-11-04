@@ -246,19 +246,18 @@ void main( void)
 
     vec3 fcolor=vec3(0.0);
 
-    fcolor= codeZeroAm(uv) /*+
+    fcolor= codeZeroAm(uv) +
             codeZeroPm(uv) +
             codeOneAm(uv)  +
             codeOnePm(uv)  +
             codeTwoAm(uv)  +
             codeTwoPm(uv)  +
-            codeThree(uv)*/;
+            codeThree(uv);
 
 
     vec4 bcolor=texture(src, uv).rgba;
     vec4 color=mix(bcolor, vec4(fcolor,1.0), step(0.0000001,length(fcolor)));
-
-    fragColor = vec4(fcolor,1.0);
+    fragColor = color;
 
 }
 
