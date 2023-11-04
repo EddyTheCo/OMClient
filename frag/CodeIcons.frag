@@ -128,18 +128,21 @@ float sdStar5(in vec2 p, in float r, in float rf)
     float h = clamp( dot(p,ba)/dot(ba,ba), 0.0, r );
     return length(p-ba*h) * sign(p.y*ba.x-p.x*ba.y);
 }
+float bump(float ref, float x)
+{
+    return step(ref-0.1,x)-step(ref+0.1,x);
+}
 
-vec4 codeZeroAm(vec2 uv)
+vec3 codeZeroAm(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.0),0.3+0.007*sin(3.0*iTime),0.35,
                    0.15+0.01*sin(3.0*iTime),0.1,9,0.02);
     vec3 pict=SUNCOLOR*fsun;
-    vec4 bcolor=texture(src, uv).rgba;
-    vec4 color=mix(bcolor, vec4(pict,1.0), fsun);
-    return color;
+
+    return pict*bump(0.0,code)*bump(1.0,is_day);
 }
 
-vec4 codeZeroPm(vec2 uv)
+vec3 codeZeroPm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.0),0.4+0.007*sin(3.0*iTime),
                     0.4+0.1*sin(3.0*iTime),0.01);
@@ -147,12 +150,10 @@ vec4 codeZeroPm(vec2 uv)
     float star2=1.0-smoothstep(-0.01,0.01,sdStar5(uv-vec2(0.2,0.35),0.05/(1.0+abs(sin(1.1*iTime))),0.48));
     vec3 pict=SUNCOLOR*(fsun+star1+star2);
 
-    vec4 bcolor=texture(src, uv).rgba;
-    vec4 color=mix(bcolor, vec4(pict,1.0), fsun+star1+star2);
-    return color;
+    return pict*bump(0.0,code)*bump(0.0,is_day);
 }
 
-vec4 codeOneAm(vec2 uv)
+vec3 codeOneAm(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.17,0.10),0.2+0.007*sin(3.0*iTime),0.25,
                    0.08+0.007*sin(3.0*iTime),0.05,9,0.01);
@@ -161,12 +162,10 @@ vec4 codeOneAm(vec2 uv)
                        vec2(0.01*sin(3.0*iTime),0.0),0.4,0.4,0.01);
     vec3 cloudcolor=WHITECLOUD*fcloud;
     vec3 pict = mix(suncolor,cloudcolor,fcloud);
-    vec4 bcolor=texture(src, uv).rgba;
-    vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud+fsun));
-    return color;
+    return pict*bump(1.0,code)*bump(1.0,is_day);
 }
 
-vec4 codeOnePm(vec2 uv)
+vec3 codeOnePm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.17,0.15),0.3+0.007*sin(3.0*iTime),
                     0.6+0.1*sin(3.0*iTime),0.01);
@@ -177,12 +176,11 @@ vec4 codeOnePm(vec2 uv)
                        vec2(0.01*sin(3.0*iTime),0.0),0.4,0.4,0.01);
     vec3 cloudcolor=WHITECLOUD*fcloud;
     vec3 pict= mix(suncolor,cloudcolor,fcloud);
-    vec4 bcolor=texture(src, uv).rgba;
-    vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud+fsun+star1+star2));
-    return color;
+
+    return pict*bump(1.0,code)*bump(0.0,is_day);
 }
 
-vec4 codeTwoAm(vec2 uv)
+vec3 codeTwoAm(vec2 uv)
 {
     float fsun=sun(uv,vec2(0.17,0.10),0.2+0.007*sin(3.0*iTime),0.25,
                    0.08+0.007*sin(3.0*iTime),0.05,9,0.01);
@@ -200,12 +198,10 @@ vec4 codeTwoAm(vec2 uv)
     vec3 cloudcolor=mix(cloudback,cloudfront,fcloud2);
     vec3 pict= mix(suncolor,cloudcolor,clamp(0.0,1.0,fcloud+fcloud2));
 
-    vec4 bcolor=texture(src, uv).rgba;
-    vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud+fcloud2+fsun));
-    return color;
+    return pict*bump(2.0,code)*bump(1.0,is_day);
 }
 
-vec4 codeTwoPm(vec2 uv)
+vec3 codeTwoPm(vec2 uv)
 {
     float fsun=moon(uv,vec2(0.17,0.15),0.3+0.007*sin(3.0*iTime),
                     0.6+0.1*sin(3.0*iTime),0.01);
@@ -225,12 +221,10 @@ vec4 codeTwoPm(vec2 uv)
     vec3 cloudcolor=mix(cloudback,cloudfront,fcloud2);
     vec3 pict= mix(suncolor,cloudcolor,clamp(0.0,1.0,fcloud+fcloud2));
 
-    vec4 bcolor=texture(src, uv).rgba;
-    vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud+fcloud2+fsun+star1+star2));
-    return color;
+    return pict*bump(2.0,code)*bump(0.0,is_day);
 }
 
-vec4 codeThree(vec2 uv)
+vec3 codeThree(vec2 uv)
 {
     float fcloud=cloud(uv,vec2(-0.1,-0.2)+
                        vec2(0.01*sin(3.0*iTime),0.0),0.3,0.3,0.01);
@@ -240,39 +234,31 @@ vec4 codeThree(vec2 uv)
 
     vec3 pict=GRAYCLOUD*fcloud;
 
-    vec4 bcolor=texture(src, uv).rgba;
-    vec4 color=mix(bcolor, vec4(pict,1.0), clamp(0.0,1.0,fcloud));
-    return color;
+
+    return pict*bump(3.0,code);
 }
 
-float bump(float ref, float x)
-{
-    return step(ref-0.1,x)-step(ref+0.1,x);
-}
 
 void main( void)
 {
     vec2 uv=vec2(qt_TexCoord0.x*2.0-1.0,1.0-qt_TexCoord0.y*2.0);
     uv.x *= pixelStep.y/pixelStep.x;
 
-    vec4 fcolor=vec4(0.0);
+    vec3 fcolor=vec3(0.0);
 
-    fcolor+=codeZeroAm(uv)*bump(0.0,code)*bump(1.0,is_day)
+    fcolor= codeZeroAm(uv) +
+            codeZeroPm(uv) +
+            codeOneAm(uv)  +
+            codeOnePm(uv)  +
+            codeTwoAm(uv)  +
+            codeTwoPm(uv)  +
+            codeThree(uv);
 
-    //+codeZeroPm(uv)*bump(0.0,code)*bump(0.0,is_day);
 
-/*
-    fcolor+=codeOneAm(uv)*bump(1.0,code)*bump(1.0,is_day);
+    vec4 bcolor=texture(src, uv).rgba;
+    vec4 color=mix(bcolor, vec4(fcolor,1.0), step(0.0000001,length(fcolor)));
 
-    fcolor+=codeOnePm(uv)*bump(1.0,code)*bump(0.0,is_day);
-
-    fcolor+=codeTwoAm(uv)*bump(2.0,code)*bump(1.0,is_day);
-
-    fcolor+=codeTwoAm(uv)*bump(2.0,code)*bump(0.0,is_day);
-
-*/
-    +codeThree(uv)*bump(3.0,code);
-    fragColor = fcolor;
+    fragColor = color;
 
 }
 
