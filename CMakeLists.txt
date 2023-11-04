@@ -59,7 +59,6 @@ if (Qt6_FOUND)
 	qt6_add_shaders(OMQml "esterVtech.com.imports.OMQml.shaders"
 		BATCHABLE
 		PRECOMPILE
-		OPTIMIZED
 		OUTPUT_TARGETS out_targets_var2
 		PREFIX
 		"/esterVtech.com/imports/OMQml"
