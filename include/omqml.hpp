@@ -20,7 +20,6 @@ class OMQML_EXPORT OMQMLData : public QObject
 
 public:
     OMQMLData(QObject *parent = nullptr);
-    void restart();
     Q_INVOKABLE void get_current_weather(void);
 signals:
     void current_weatherChanged();
@@ -33,5 +32,6 @@ private:
     OMClient* m_omclient;
     float m_latitude,m_longitude;
     QString m_temperature_unit,m_code_picture;
+    OMResponse* rply;
 };
 

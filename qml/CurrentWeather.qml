@@ -11,11 +11,8 @@ Rectangle
     property alias temperature_unit:omdata.temperature_unit;
     property bool conected:(omdata.current_weather!==null)
     property color frontColor:"white"
+    property string codeIcons:"code2Am1"
 
-    Component.onCompleted:
-    {
-        omdata.get_current_weather();
-    }
 
     FontLoader {
         id: boldFont
@@ -31,13 +28,27 @@ Rectangle
     OMQMLData
     {
         id:omdata
+        Component.onCompleted:
+        {
+            omdata.get_current_weather();
+        }
         onCurrent_weatherChanged:
         {
-	console.log("weather_code:",omdata.current_weather.weathercode);
-            shader.code=omdata.current_weather.weathercode+0.5;
-            shader.is_day=omdata.current_weather.is_day+0.5;
+            console.log("weather_code:",omdata.current_weather.weathercode);
+
+            if(omdata.current_weather.weathercode<4)
+            {
+                let cions="code"+omdata.current_weather.weathercode;
+                if(omdata.current_weather.weathercode<3)
+                {
+                    cions+="Am"+omdata.current_weather.is_day;
+                }
+                root.codeIcons=cions;
+                console.log("root.CodeIcons:",root.codeIcons);
+            }
+            console.log("root.CodeIcons:",root.codeIcons);
             temp.text=(isNaN(Math.round(omdata.current_weather.temperature)))?"":
-            (Math.round(omdata.current_weather.temperature)+"\u00b0")
+              (Math.round(omdata.current_weather.temperature)+"\u00b0")
         }
     }
 
@@ -46,7 +57,7 @@ Rectangle
         onTriggered:
         {
             let cday=new Date();
-            time.text = cday.getMonth()+1+"/"+cday.getDate()+"   "+cday.getHours()+":"+cday.getMinutes();
+            time.text = cday.getMonth()+1+"/"+cday.getDate()+"   "+cday.getHours()+":"+((cday.getMinutes()<10)?"0":"")+cday.getMinutes();
         }
     }
 
@@ -76,10 +87,8 @@ Rectangle
                     anchors.fill: rectang;
                     property var src:rectang;
                     property real iTime:0.0;
-                    property real code:2.5;
-                    property real is_day:1.5;
                     property var pixelStep: Qt.vector2d(1/src.width, 1/src.height)
-                    fragmentShader: "qrc:/esterVtech.com/imports/OMQml/frag/CodeIcons.frag.qsb"
+                    fragmentShader: "qrc:/esterVtech.com/imports/OMQml/frag/"+root.codeIcons+".frag.qsb"
                 }
                 Timer {
                     id:timer
