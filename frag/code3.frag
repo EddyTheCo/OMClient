@@ -36,7 +36,7 @@ float sdRoundedBox( in vec2 p, in vec2 b, in vec4 r )
 }
 float cloud(vec2 uv, vec2 p,float width,float height)
 {
-    float f=1.0-smoothstep(-BLUR,BLUR,
+    float f=1.0-smoothstep(0.0,BLUR,
                            sdRoundedBox(uv-p,vec2(width,height/2.5),vec4(min(width,height)*0.4)));
     f+=Circle(uv,p+vec2(-width*0.33,height/2.1),width/2.2);
     f+=Circle(uv,p+vec2(width*0.33,height/2.1),width/2.9);

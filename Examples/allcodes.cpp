@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 	engine.addImportPath("qrc:/esterVtech.com/imports");
     qDebug()<<engine.importPathList();
 
-    const QUrl url=QUrl("qrc:/esterVtech.com/imports/"+QString(SHADER)+"/qml/single.qml");
+    const QUrl url=QUrl("qrc:/esterVtech.com/imports/allcodes/qml/allcodes.qml");
 
 	// Load the main QML file
 	engine.load(url);

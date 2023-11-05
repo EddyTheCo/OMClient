@@ -7,14 +7,25 @@ foreach(example "code3"
                 "code1Am1"
                 "code1Am0"
                 "code0Am1"
-                "code0Am0" 		
+                "code0Am0"
+                "allcodes"
 		)
-qt_add_executable(${example} single.cpp )
+if(${example} STREQUAL "allcodes")
+    qt_add_executable(${example} allcodes.cpp )
+    set(qmlfile "qml/allcodes.qml")
+else()
+    qt_add_executable(${example} single.cpp include/single.hpp)
+    target_include_directories(${example} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+    target_compile_definitions(${example} PRIVATE WINDOWS_OMONI)
+    target_compile_definitions(${example} PRIVATE SHADER="${example}")
+    set(qmlfile "qml/single.qml")
+endif()
+
 qt6_add_qml_module(${example}
-	URI  App
+        URI  ${example}
 	VERSION 1.0
 	QML_FILES
-	qml/single.qml
+        ${qmlfile}
 	RESOURCE_PREFIX
 	"/esterVtech.com/imports"
 	IMPORT_PATH ${CMAKE_BINARY_DIR}
@@ -22,10 +33,10 @@ qt6_add_qml_module(${example}
 	${CMAKE_BINARY_DIR}/${example}
 	)
 
-# Link the application target with the libraries
+
 target_link_libraries(${example} PRIVATE Qt::Gui Qt::Qml Qt::Quick OMQml
 	)
-target_compile_definitions(${example} PRIVATE SHADER ${example})
+
 set_target_properties(${example} PROPERTIES
 	WIN32_EXECUTABLE ON
 	MACOSX_BUNDLE ON

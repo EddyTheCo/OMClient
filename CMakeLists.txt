@@ -75,9 +75,9 @@ if (Qt6_FOUND)
                 )
 
         target_link_libraries(OMQml PUBLIC Qt6::Gui Qt6::Quick Qt6::Core Qt6::Network)
-#if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_EXAMPLES)
         add_subdirectory(Examples)
-#endif()
+endif()
 
         target_compile_definitions(OMQml PRIVATE WINDOWS_OMQML)
         target_include_directories(OMQml PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
