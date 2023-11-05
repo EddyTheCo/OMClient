@@ -11,8 +11,7 @@ Rectangle
     property alias temperature_unit:omdata.temperature_unit;
     property bool conected:(omdata.current_weather!==null)
     property color frontColor:"white"
-    property string codeIcons:"code0Am0"
-
+    property string codeIcons:"code3"
 
 
     FontLoader {
@@ -49,7 +48,7 @@ Rectangle
             }
             console.log("root.CodeIcons:",root.codeIcons);
             temp.text=(isNaN(Math.round(omdata.current_weather.temperature)))?"":
-                                                                               (Math.round(omdata.current_weather.temperature)+"\u00b0")
+              (Math.round(omdata.current_weather.temperature)+"\u00b0")
         }
     }
 
