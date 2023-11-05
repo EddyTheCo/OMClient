@@ -6,11 +6,10 @@
 
 #define LIGHTREP 9
 #define BLUR 0.02
-#define SUNRADIUS 0.3+0.007*sin(3.0*iTime)
-#define LIGHTSTART 0.35
-#define LIGHTHEIGHT 0.15+0.01*sin(3.0*iTime)
-#define LIGHTWIDTH 0.1
-
+#define SUNR1 0.2
+#define SUNR2 0.25
+#define SUNR3 0.35
+#define SUNW  0.35
 
 
 
@@ -33,14 +32,12 @@ float Circle(vec2 uv,vec2 p, float r)
     return c;
 }
 
-float sdOrientedBox( in vec2 p, in vec2 a, in vec2 b, float th )
+float sun(float r, float a)
 {
-    float l = length(b-a);
-    vec2  d = (b-a)/l;
-    vec2  q = (p-(a+b)*0.5);
-    q = mat2(d.x,-d.y,d.y,d.x)*q;
-    q = abs(q)-vec2(l,th)*0.5;
-    return length(max(q,0.0)) + min(max(q.x,q.y),0.0);
+    float f= smoothstep(SUNR2-BLUR,SUNR2,r) - smoothstep(SUNR3+0.01*sin(2.0*iTime)-BLUR,SUNR3+0.01*sin(2.0*iTime),r);
+    f*= smoothstep(0.0,BLUR,-2.0*SUNW+sin(LIGHTREP*a+iTime));
+    f+=1.0-smoothstep(SUNR1-BLUR,SUNR1,r);
+    return f;
 }
 float sdRoundedBox( in vec2 p, in vec2 b, in vec4 r )
 {
@@ -63,52 +60,7 @@ void main( void)
     vec2 uv=vec2(qt_TexCoord0.x*2.0-1.0,1.0-qt_TexCoord0.y*2.0);
     uv.x *= pixelStep.y/pixelStep.x;
 
-    vec2 p=vec2(0.0);
-    float f=Circle(uv,p,SUNRADIUS);
-
-    float angle=2.0*PI/9.0;
-
-    float a=0.0;
-    f+=1.0-smoothstep(-BLUR,BLUR,
-                      sdOrientedBox(uv,p+LIGHTSTART*vec2(cos(angle*a),sin(angle*a)),
-                                    p+(LIGHTSTART+LIGHTHEIGHT)*vec2(cos(angle*a),sin(angle*a)),LIGHTWIDTH));
-    a=1.0;
-    f+=1.0-smoothstep(-BLUR,BLUR,
-                      sdOrientedBox(uv,p+LIGHTSTART*vec2(cos(angle*a),sin(angle*a)),
-                                    p+(LIGHTSTART+LIGHTHEIGHT)*vec2(cos(angle*a),sin(angle*a)),LIGHTWIDTH));
-
-    a=2.0;
-    f+=1.0-smoothstep(-BLUR,BLUR,
-                      sdOrientedBox(uv,p+LIGHTSTART*vec2(cos(angle*a),sin(angle*a)),
-                                    p+(LIGHTSTART+LIGHTHEIGHT)*vec2(cos(angle*a),sin(angle*a)),LIGHTWIDTH));
-
-    a=3.0;
-    f+=1.0-smoothstep(-BLUR,BLUR,
-                      sdOrientedBox(uv,p+LIGHTSTART*vec2(cos(angle*a),sin(angle*a)),
-                                    p+(LIGHTSTART+LIGHTHEIGHT)*vec2(cos(angle*a),sin(angle*a)),LIGHTWIDTH));
-
-    a=4.0;
-    f+=1.0-smoothstep(-BLUR,BLUR,
-                      sdOrientedBox(uv,p+LIGHTSTART*vec2(cos(angle*a),sin(angle*a)),
-                                    p+(LIGHTSTART+LIGHTHEIGHT)*vec2(cos(angle*a),sin(angle*a)),LIGHTWIDTH));
-
-    a=5.0;
-    f+=1.0-smoothstep(-BLUR,BLUR,
-                      sdOrientedBox(uv,p+LIGHTSTART*vec2(cos(angle*a),sin(angle*a)),
-                                    p+(LIGHTSTART+LIGHTHEIGHT)*vec2(cos(angle*a),sin(angle*a)),LIGHTWIDTH));
-    a=6.0;
-    f+=1.0-smoothstep(-BLUR,BLUR,
-                      sdOrientedBox(uv,p+LIGHTSTART*vec2(cos(angle*a),sin(angle*a)),
-                                    p+(LIGHTSTART+LIGHTHEIGHT)*vec2(cos(angle*a),sin(angle*a)),LIGHTWIDTH));
-    a=7.0;
-    f+=1.0-smoothstep(-BLUR,BLUR,
-                      sdOrientedBox(uv,p+LIGHTSTART*vec2(cos(angle*a),sin(angle*a)),
-                                    p+(LIGHTSTART+LIGHTHEIGHT)*vec2(cos(angle*a),sin(angle*a)),LIGHTWIDTH));
-    a=8.0;
-    f+=1.0-smoothstep(-BLUR,BLUR,
-                      sdOrientedBox(uv,p+LIGHTSTART*vec2(cos(angle*a),sin(angle*a)),
-                                    p+(LIGHTSTART+LIGHTHEIGHT)*vec2(cos(angle*a),sin(angle*a)),LIGHTWIDTH));
-
+    float f=sun(length(uv),atan(uv.x,uv.y));
 
     f = clamp(f,0.0,1.0);
     vec3 suncolor=SUNCOLOR*f;
