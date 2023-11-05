@@ -11,7 +11,7 @@ Rectangle
     property alias temperature_unit:omdata.temperature_unit;
     property bool conected:(omdata.current_weather!==null)
     property color frontColor:"white"
-    property string codeIcons:"code3"
+    property string codeIcons:"code2Am1"
 
 
     FontLoader {
