@@ -1,37 +1,41 @@
 import QtQuick.Layouts
 import QtQuick
-import OMQml
+import Esterv.CustomControls.OpenMeteo
 import QtQuick.Controls
 import QtQml
-Rectangle
+
+
+Item
 {
-    id:root
+    id:control
     property alias latitude:omdata.latitude;
     property alias longitude:omdata.longitude;
     property alias temperature_unit:omdata.temperature_unit;
-    property bool conected:(omdata.current_weather!==null)
-    property color frontColor:"white"
-    property string codeIcons:"code2Am1"
+
+    property color color: "white"
+
+    property font boldFont: cboldFont.font
+    property font lightfont: clightfont.font
+    property bool showTime: true
 
 
     FontLoader {
-        id: boldFont
-        source: "qrc:/esterVtech.com/imports/OMQml/fonts/Mukta/Mukta-Bold.ttf"
+        id: cboldFont
+        source: "qrc:/esterVtech.com/imports/Esterv/CustomControls/OpenMeteo/fonts/Mukta/Mukta-Bold.ttf"
     }
     FontLoader {
-        id: lightfont
-        source: "qrc:/esterVtech.com/imports/OMQml/fonts/Mukta/Mukta-ExtraLight.ttf"
+        id: clightfont
+        source: "qrc:/esterVtech.com/imports/Esterv/CustomControls/OpenMeteo/fonts/Mukta/Mukta-ExtraLight.ttf"
     }
-
-    color:"transparent"
+    Component.onCompleted:
+    {
+        omdata.get_current_weather();
+    }
 
     OMQMLData
     {
         id:omdata
-        Component.onCompleted:
-        {
-            omdata.get_current_weather();
-        }
+
         onCurrent_weatherChanged:
         {
             console.log("weather_code:",omdata.current_weather.weathercode);
@@ -43,17 +47,17 @@ Rectangle
                 {
                     cions+="Am"+omdata.current_weather.is_day;
                 }
-                root.codeIcons=cions;
-                console.log("root.CodeIcons:",root.codeIcons);
+                shader.codeIcons=cions;
+                console.log("shader.CodeIcons:",shader.codeIcons);
             }
-            console.log("root.CodeIcons:",root.codeIcons);
+            console.log("shader.CodeIcons:",shader.codeIcons);
             temp.text=(isNaN(Math.round(omdata.current_weather.temperature)))?"":
-              (Math.round(omdata.current_weather.temperature)+"\u00b0")
+            (Math.round(omdata.current_weather.temperature)+"\u00b0")
         }
     }
 
     Timer {
-        interval: 500; running: true; repeat: true
+        interval: 500; running: control.showTime; repeat: true
         onTriggered:
         {
             let cday=new Date();
@@ -61,85 +65,73 @@ Rectangle
         }
     }
 
-    ColumnLayout
+
+    Item
     {
+        id:codefigure
+        width:Math.min(control.width,control.height)*0.5
+        height:width*((control.showTime)?1.0:2.0)
 
-        anchors.fill: root
-        RowLayout
-        {
-            id:rlo
-
-            Layout.fillHeight: true
-            Layout.alignment: Qt.AlignTop||Qt.AlignHCenter
-
-
-            Rectangle
-            {
-                id:rectang
-                color:"transparent"
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.minimumWidth: root.width*0.4
-                Layout.alignment: Qt.AlignTop|Qt.AlignHCenter
-                visible:root.conected
-                ShaderEffect {
-                    id: shader
-                    anchors.fill: rectang;
-                    property var src:rectang;
-                    property real iTime:0.0;
-                    property var pixelStep: Qt.vector2d(1/src.width, 1/src.height)
-                    fragmentShader: "qrc:/esterVtech.com/imports/OMQml/frag/"+root.codeIcons+".frag.qsb"
-                }
-                Timer {
-                    id:timer
-                    interval: 50;  repeat: true; running: true
-                    onTriggered:
-                    {
-                        shader.iTime+=0.05;
-                    }
+        ShaderEffect {
+            id: shader
+            property string codeIcons:"code2Am1"
+            anchors.centerIn: codefigure
+            width:codefigure.width*0.95
+            height:codefigure.height*0.95
+            property var src:codefigure;
+            property real iTime:0.0;
+            property var pixelStep: Qt.vector2d(1/src.width, 1/src.height)
+            fragmentShader: "qrc:/esterVtech.com/imports/Designs/frag/"+shader.codeIcons+".frag.qsb"
+            Timer {
+                id:timer
+                interval: 50;  repeat: true; running: true
+                onTriggered:
+                {
+                    shader.iTime+=0.05;
                 }
             }
-            Label
-            {
-                id:temp
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                fontSizeMode:Text.Fit
-                font:Qt.font({  family: boldFont.font.family,
-                                 weight: boldFont.font.weight ,
-                                 pointSize : 250});
-
-                visible:root.conected
-                color:root.frontColor
-                horizontalAlignment:Text.AlignHCenter
-                verticalAlignment:Text.AlignVCenter
-                Layout.alignment: Qt.AlignTop|Qt.AlignHCenter
-            }
         }
-        Label
-        {
-            id:time
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.leftMargin: 20
-            Layout.rightMargin: 20
-            Layout.bottomMargin:  20
-            fontSizeMode:Text.Fit
-            font:Qt.font({  family: lightfont.font.family,
-                             weight: lightfont.font.weight ,
-                             pointSize : 150});
-            Layout.alignment: Qt.AlignTop|Qt.AlignHCenter
 
-            visible:root.conected
-            color:root.frontColor
-            horizontalAlignment:Text.AlignHCenter
-            verticalAlignment:Text.AlignVCenter
-
-        }
     }
+
+    Label
+    {
+        id:temp
+        width:codefigure.width
+        height:codefigure.height
+        anchors.left: codefigure.right
+        fontSizeMode:Text.Fit
+        font:Qt.font({  family: control.boldFont.family,
+                         weight: control.boldFont.weight,
+                         pointSize : 250});
+
+        color:control.color
+        horizontalAlignment:Text.AlignHCenter
+        verticalAlignment:Text.AlignVCenter
+        Layout.alignment: Qt.AlignTop|Qt.AlignHCenter
+    }
+    Label
+    {
+        id:time
+        width:codefigure.width*2.0
+        height:codefigure.height
+        anchors.top: codefigure.bottom
+        fontSizeMode:Text.Fit
+        font:Qt.font({  family: control.lightfont.family,
+                         weight: control.lightfont.weight ,
+                         pointSize : 150});
+
+
+        visible:control.showTime
+        color:control.color
+        horizontalAlignment:Text.AlignHCenter
+        verticalAlignment:Text.AlignVCenter
+
+    }
+
     MouseArea
     {
-        anchors.fill: root
+        anchors.fill: control
         onClicked:
         {
             omdata.get_current_weather();

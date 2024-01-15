@@ -1,6 +1,5 @@
-cmake_minimum_required(VERSION 3.11)
 
-
+if(USE_QML)
 qt_add_executable(allcodes allcodes.cpp )
 
 qt6_add_qml_module(allcodes
@@ -13,8 +12,8 @@ qt6_add_qml_module(allcodes
 	IMPORT_PATH ${CMAKE_BINARY_DIR}
 	)
 
-target_link_libraries(allcodes PRIVATE Qt::Gui Qt::Qml Qt::Quick OMQml
-	$<$<STREQUAL:$<TARGET_PROPERTY:OMQml,TYPE>,STATIC_LIBRARY>:OMQmlplugin>
+target_link_libraries(allcodes PRIVATE Qt::Gui Qt::Qml Qt::Quick openMeteo::OMClient 
+	$<$<STREQUAL:$<TARGET_PROPERTY:openMeteo::OMClient,TYPE>,STATIC_LIBRARY>:openMeteo::OMClientplugin>
 	)
 
 
@@ -26,3 +25,4 @@ install(TARGETS allcodes
 	BUNDLE  DESTINATION .
 	DESTINATION ${CMAKE_INSTALL_BINDIR}
 	)
+endif(USE_QML)

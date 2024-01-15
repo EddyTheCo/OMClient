@@ -139,7 +139,7 @@ if (Qt6_FOUND)
 		include(CPack)
 	endif()
 	if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_EXAMPLES)
-		add_subdirectory(Examples)
+		add_subdirectory(examples)
 	endif()
 
 endif(Qt6_FOUND)

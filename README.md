@@ -1,6 +1,29 @@
 # Open-Meteo Client Implementation 
 
-Implements  a client to communicate with the Open-Meteo REST API. And creates a custom QML type that shows the current weather conditions, the date, and the time.
+Implements  a client to communicate with the Open-Meteo REST API. 
+The repo creates  a custom QML module and types related with weather conditions.
+
+
+## Installing the library 
+
+### From source code
+```
+git clone https://github.com/EddyTheCo/OMClient.git 
+
+mkdir build
+cd build
+qt-cmake -G Ninja -DCMAKE_INSTALL_PREFIX=installDir -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=OFF -DUSE_QML=OFF -DBUILD_DOCS=OFF ../OMClient
+
+cmake --build . 
+
+cmake --install . 
+```
+where `installDir` is the installation path. 
+Setting the `USE_QML` variable produce or not the QML module.
+One can choose to build or not the examples and the documentation with the `BUILD_EXAMPLES` and `BUILD_DOCS` variables.
+
+### From GitHub releases
+Download the releases from this repo. 
 
 
 ## Use it in your project
@@ -9,37 +32,26 @@ Just add to your project CMakeLists.txt
 
 ```
 FetchContent_Declare(
-        OMQml
+        openMeteo
         GIT_REPOSITORY https://github.com/EddyTheCo/OMClient.git
-        GIT_TAG main
-        FIND_PACKAGE_ARGS 0.0 CONFIG
+        GIT_TAG v0.2.0
+        FIND_PACKAGE_ARGS 0.2 CONFIG
     )
-FetchContent_MakeAvailable(OMQml)
-target_link_libraries(yourAppTarget PRIVATE OMQml)
+FetchContent_MakeAvailable(openMeteo)
+target_link_libraries(<target> <PRIVATE|PUBLIC|INTERFACE> openMeteo::OMClient)
+```
+If want to use the QML module also add
+```
+$<$<STREQUAL:$<TARGET_PROPERTY:openMeteo::OMClient,TYPE>,STATIC_LIBRARY>:openMeteo::OMClientplugin>
 ```
 
-Then you have to add to your [QML IMPORT PATH](https://doc.qt.io/qt-6/qtqml-syntax-imports.html) the `qrc:/esterVtech.com/imports` path.
-For that one could add this to the  main function:
+## Using the QML modules
 
-```
-QQmlApplicationEngine engine;
-engine.addImportPath("qrc:/esterVtech.com/imports");
-```
-The current weather widget can be created like: 
+One needs to  make available to the QML engine the different modules by setting the [QML import path](https://doc.qt.io/qt-6/qtqml-syntax-imports.html#qml-import-path).
 
-```
-import OMQml
+1. In your main function `engine.addImportPath("qrc:/esterVtech.com/imports");` to use the resource file. 
 
-CurrentWeather
-{
-	width:250
-        height:250
-        anchors.centerIn:parent
-        latitude:41.902916
-        longitude:12.453389
-        frontColor:"lightgray"
-}
-```
+2. Set the environment variable like `export QML_IMPORT_PATH=installDir/CMAKE_INSTALL_LIBDIR`  where `CMAKE_INSTALL_LIBDIR` is where `Esterv` folder was created.
 
 You can play with the QML element [here](https://eddytheco.github.io/qmlonline/?example_url=omclient). 
 
