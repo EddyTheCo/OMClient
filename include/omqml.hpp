@@ -6,7 +6,7 @@
 #include <QtCore/QtGlobal>
 
 
-class OMQML_EXPORT OMQMLData : public QObject
+class OMClient_EXPORT OMQMLData : public QObject
 {
     Q_OBJECT
 

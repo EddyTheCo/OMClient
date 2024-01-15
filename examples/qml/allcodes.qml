@@ -1,11 +1,11 @@
-import OMQml
 import QtQuick
 import QtQuick.Controls
-
+import Esterv.CustomControls.OpenMeteo
 
 ApplicationWindow {
     visible: true
     id:window
+
 
     Timer {
         id:timer
@@ -25,7 +25,8 @@ ApplicationWindow {
     {
         anchors.fill: parent
         contentWidth:width
-        contentHeight:parent.width*0.5*4
+        contentHeight:parent.width*0.5*5
+
         Rectangle
         {
             id:code0Am1Box
@@ -38,7 +39,7 @@ ApplicationWindow {
                 property var src:code0Am1Box;
                 property real iTime:0.0;
                 property var pixelStep: Qt.vector2d(1/src.width, 1/src.height)
-                fragmentShader: "qrc:/esterVtech.com/imports/OMQml/frag/code0Am1.frag.qsb"
+                fragmentShader: "qrc:/esterVtech.com/imports/Designs/frag/code0Am1.frag.qsb"
             }
 
         }
@@ -55,7 +56,7 @@ ApplicationWindow {
                 property var src:code0Am0Box;
                 property real iTime:0.0;
                 property var pixelStep: Qt.vector2d(1/src.width, 1/src.height)
-                fragmentShader: "qrc:/esterVtech.com/imports/OMQml/frag/code0Am0.frag.qsb"
+                fragmentShader: "qrc:/esterVtech.com/imports/Designs/frag/code0Am0.frag.qsb"
             }
 
         }
@@ -72,7 +73,7 @@ ApplicationWindow {
                 property var src:code1Am1Box;
                 property real iTime:0.0;
                 property var pixelStep: Qt.vector2d(1/src.width, 1/src.height)
-                fragmentShader: "qrc:/esterVtech.com/imports/OMQml/frag/code1Am1.frag.qsb"
+                fragmentShader: "qrc:/esterVtech.com/imports/Designs/frag/code1Am1.frag.qsb"
             }
 
         }
@@ -90,7 +91,7 @@ ApplicationWindow {
                 property var src:code1Am0Box;
                 property real iTime:0.0;
                 property var pixelStep: Qt.vector2d(1/src.width, 1/src.height)
-                fragmentShader: "qrc:/esterVtech.com/imports/OMQml/frag/code1Am0.frag.qsb"
+                fragmentShader: "qrc:/esterVtech.com/imports/Designs/frag/code1Am0.frag.qsb"
             }
 
         }
@@ -107,7 +108,7 @@ ApplicationWindow {
                 property var src:code2Am1Box;
                 property real iTime:0.0;
                 property var pixelStep: Qt.vector2d(1/src.width, 1/src.height)
-                fragmentShader: "qrc:/esterVtech.com/imports/OMQml/frag/code2Am1.frag.qsb"
+                fragmentShader: "qrc:/esterVtech.com/imports/Designs/frag/code2Am1.frag.qsb"
             }
 
         }
@@ -125,7 +126,7 @@ ApplicationWindow {
                 property var src:code2Am0Box;
                 property real iTime:0.0;
                 property var pixelStep: Qt.vector2d(1/src.width, 1/src.height)
-                fragmentShader: "qrc:/esterVtech.com/imports/OMQml/frag/code2Am0.frag.qsb"
+                fragmentShader: "qrc:/esterVtech.com/imports/Designs/frag/code2Am0.frag.qsb"
             }
 
         }
@@ -143,9 +144,29 @@ ApplicationWindow {
                 property var src:code3Box;
                 property real iTime:0.0;
                 property var pixelStep: Qt.vector2d(1/src.width, 1/src.height)
-                fragmentShader: "qrc:/esterVtech.com/imports/OMQml/frag/code3.frag.qsb"
+                fragmentShader: "qrc:/esterVtech.com/imports/Designs/frag/code3.frag.qsb"
             }
 
+        }
+        CurrentWeather
+        {
+            width:parent.width*0.5
+            height:width
+            anchors.left:code3Box.right
+            anchors.top:code2Am1Box.bottom
+            latitude:41.902916
+            longitude:12.453389
+            color:"lightgray"
+        }
+        CurrentWeather
+        {
+            width:parent.width*0.5
+            height:width
+            anchors.top:code3Box.bottom
+            latitude:41.902916
+            longitude:12.453389
+            color:"green"
+            showTime:false
         }
 
     }

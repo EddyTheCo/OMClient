@@ -5,13 +5,13 @@
 #include <QNetworkReply>
 #include <QJsonValue>
 
-#if defined(WINDOWS_OMQML)
-# define OMQML_EXPORT Q_DECL_EXPORT
+#if defined(WINDOWS_OMClient)
+# define OMClient_EXPORT Q_DECL_EXPORT
 #else
-#define OMQML_EXPORT Q_DECL_IMPORT
+#define OMClient_EXPORT Q_DECL_IMPORT
 #endif
 
-class OMQML_EXPORT OMResponse: public QObject
+class OMClient_EXPORT OMResponse: public QObject
 {
     Q_OBJECT
 public:
@@ -25,7 +25,7 @@ private:
 
 };
 
-class OMQML_EXPORT OMClient: public QObject
+class OMClient_EXPORT OMClient: public QObject
 {
 
     Q_OBJECT
