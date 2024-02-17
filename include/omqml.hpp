@@ -14,8 +14,6 @@ class OMClient_EXPORT OMQMLData : public QObject
     Q_PROPERTY(float  latitude MEMBER m_latitude NOTIFY positionChanged)
     Q_PROPERTY(float  longitude MEMBER m_longitude NOTIFY positionChanged)
     Q_PROPERTY(QString  temperature_unit MEMBER m_temperature_unit NOTIFY temperature_unitChanged)
-
-
     QML_ELEMENT
 
 public:
@@ -32,6 +30,5 @@ private:
     OMClient* m_omclient;
     float m_latitude,m_longitude;
     QString m_temperature_unit,m_code_picture;
-    OMResponse* rply;
 };
 

@@ -35,7 +35,6 @@ Item
     OMQMLData
     {
         id:omdata
-
         onCurrent_weatherChanged:
         {
             console.log("weather_code:",omdata.current_weather.weathercode);
@@ -50,7 +49,6 @@ Item
                 shader.codeIcons=cions;
                 console.log("shader.CodeIcons:",shader.codeIcons);
             }
-            console.log("shader.CodeIcons:",shader.codeIcons);
             temp.text=(isNaN(Math.round(omdata.current_weather.temperature)))?"":
             (Math.round(omdata.current_weather.temperature)+"\u00b0")
         }
@@ -64,7 +62,6 @@ Item
             time.text = cday.getMonth()+1+"/"+cday.getDate()+"   "+cday.getHours()+":"+((cday.getMinutes()<10)?"0":"")+cday.getMinutes();
         }
     }
-
 
     Item
     {
