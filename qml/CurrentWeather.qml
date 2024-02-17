@@ -8,9 +8,9 @@ import QtQml
 Item
 {
     id:control
-    property alias latitude:omdata.latitude;
-    property alias longitude:omdata.longitude;
-    property alias temperature_unit:omdata.temperature_unit;
+    property alias latitude:omclient.latitude;
+    property alias longitude:omclient.longitude;
+    property alias tempUnit:omclient.tempUnit;
 
     property color color: "white"
 
@@ -29,28 +29,26 @@ Item
     }
     Component.onCompleted:
     {
-        omdata.get_current_weather();
+        omclient.getCurrentWeather();
     }
 
-    OMQMLData
+    OMClient
     {
-        id:omdata
-        onCurrent_weatherChanged:
+        id:omclient
+        onCurrentWeatherChanged:
         {
-            console.log("weather_code:",omdata.current_weather.weathercode);
-
-            if(omdata.current_weather.weathercode<4)
+            if(omclient.currentWeather.weathercode<4)
             {
-                let cions="code"+omdata.current_weather.weathercode;
-                if(omdata.current_weather.weathercode<3)
+                let cions="code"+omclient.currentWeather.weathercode;
+                if(omclient.currentWeather.weathercode<3)
                 {
-                    cions+="Am"+omdata.current_weather.is_day;
+                    cions+="Am"+omclient.currentWeather.is_day;
                 }
                 shader.codeIcons=cions;
-                console.log("shader.CodeIcons:",shader.codeIcons);
+
             }
-            temp.text=(isNaN(Math.round(omdata.current_weather.temperature)))?"":
-            (Math.round(omdata.current_weather.temperature)+"\u00b0")
+            temp.text=(isNaN(Math.round(omclient.currentWeather.temperature)))?"":
+            (Math.round(omclient.currentWeather.temperature)+"\u00b0")
         }
     }
 
@@ -131,7 +129,7 @@ Item
         anchors.fill: control
         onClicked:
         {
-            omdata.get_current_weather();
+            omclient.getCurrentWeather();
         }
     }
 }

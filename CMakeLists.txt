@@ -36,9 +36,6 @@ if (Qt6_FOUND)
 		qt6_add_qml_module(OMClient
 			URI  Esterv.CustomControls.OpenMeteo
 			VERSION 1.0
-			SOURCES
-			"src/omqml.cpp"
-			"include/omqml.hpp"
 			QML_FILES
 			"qml/CurrentWeather.qml"
 			RESOURCE_PREFIX
@@ -51,7 +48,7 @@ if (Qt6_FOUND)
 			${CMAKE_BINARY_DIR}/Esterv/CustomControls/OpenMeteo
 			)
 		add_library(${PROJECT_NAME}::OMClientplugin ALIAS OMClientplugin)
-
+                target_compile_definitions(OMClient PRIVATE USE_QML)
 		qt6_add_shaders(OMClient "esterVtech.com.imports.OMClient.shaders"
 			BATCHABLE
 			PRECOMPILE
