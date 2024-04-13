@@ -7,7 +7,7 @@ include(FetchContent)
 FetchContent_Declare(
 	ccommon
 	GIT_REPOSITORY https://github.com/EddyTheCo/Common.git
-	GIT_TAG v0.1.1
+	GIT_TAG v0.3.0
 	)
 FetchContent_MakeAvailable(ccommon)
 version_from_git(
@@ -46,9 +46,10 @@ if (Qt6_FOUND)
 			OUTPUT_TARGETS out_targets_var
 			OUTPUT_DIRECTORY
 			${CMAKE_BINARY_DIR}/Esterv/CustomControls/OpenMeteo
+			IMPORT_PATH ${CMAKE_BINARY_DIR}
 			)
 		add_library(${PROJECT_NAME}::OMClientplugin ALIAS OMClientplugin)
-                target_compile_definitions(OMClient PRIVATE USE_QML)
+		target_compile_definitions(OMClient PRIVATE USE_QML)
 		qt6_add_shaders(OMClient "esterVtech.com.imports.OMClient.shaders"
 			BATCHABLE
 			PRECOMPILE
@@ -68,19 +69,21 @@ if (Qt6_FOUND)
 
 		target_link_libraries(OMClient PUBLIC Qt6::Gui Qt6::Quick)
 
-                install(TARGETS ${out_targets_var} ${out_targets_var2}
+		install(TARGETS ${out_targets_var} ${out_targets_var2}
 			EXPORT ${PROJECT_NAME}-config
 			DESTINATION ${CMAKE_INSTALL_LIBDIR}
 			COMPONENT omclient
+			RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT omclient
 			)
 		install(DIRECTORY ${CMAKE_BINARY_DIR}/Esterv/CustomControls/OpenMeteo
 			DESTINATION ${CMAKE_INSTALL_LIBDIR}/Esterv/CustomControls
 			COMPONENT omclient
 			)
-                install(TARGETS OMClientplugin
+		install(TARGETS OMClientplugin
 			EXPORT ${PROJECT_NAME}-config
 			DESTINATION ${CMAKE_INSTALL_LIBDIR}/Esterv/CustomControls/OpenMeteo
 			COMPONENT omclient
+			RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT omclient
 			)
 	endif(USE_QML)
 	add_library(${PROJECT_NAME}::OMClient ALIAS OMClient)
@@ -95,52 +98,21 @@ if (Qt6_FOUND)
 		EXPORT ${PROJECT_NAME}-config
 		DESTINATION ${CMAKE_INSTALL_LIBDIR}
 		COMPONENT omclient
+		RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT omclient
 		)
 	install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/
 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Esterv/${PROJECT_NAME}
-		COMPONENT omclient
-		)
-
-	install(EXPORT ${PROJECT_NAME}-config
-		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-		NAMESPACE ${PROJECT_NAME}::
 		COMPONENT ${PROJECT_NAME}
 		)
-	include(CMakePackageConfigHelpers)
-	configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
-		"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-		INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-		)
-	write_basic_package_version_file(
-		"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
-		VERSION ${VERSION}
-		COMPATIBILITY SameMajorVersion
-		)
-	install(FILES
-		${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-		${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-		)
-	export(EXPORT ${PROJECT_NAME}-config
-		FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
-		)
 
+	build_exports()
 	if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-		set(CPACK_PACKAGE_CONTACT "estervtech")
-		include(CTest)
-		set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-v${SEMVER}-${CMAKE_SYSTEM_NAME}_${CMAKE_SYSTEM_VERSION}-${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_CXX_COMPILER_ID}")
-		if(NOT BUILD_SHARED_LIBS)
-			set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-static")
-		endif(NOT BUILD_SHARED_LIBS)
-		include(CPack)
-	endif()
-	if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_EXAMPLES)
 		add_subdirectory(examples)
-	endif()
+		build_cpack()
+	endif(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
 endif(Qt6_FOUND)
 
 if(BUILD_DOCS)
-	get_target_property(build_docs cmake_build_docs SOURCES)
-	include(${build_docs})
-endif()
+	build_docs()
+endif(BUILD_DOCS)
