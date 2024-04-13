@@ -1,5 +1,7 @@
 # Open-Meteo Client Implementation 
 
+[TOC]
+
 Implements  a client to communicate with the Open-Meteo REST API. 
 The repo creates  a custom QML module and types related with weather conditions.
 
@@ -34,8 +36,8 @@ Just add to your project CMakeLists.txt
 FetchContent_Declare(
         openMeteo
         GIT_REPOSITORY https://github.com/EddyTheCo/OMClient.git
-        GIT_TAG v0.2.0
-        FIND_PACKAGE_ARGS 0.2 CONFIG
+	GIT_TAG vMAJOR.MINOR.PATCH 
+	FIND_PACKAGE_ARGS MAJOR.MINOR CONFIG  
     )
 FetchContent_MakeAvailable(openMeteo)
 target_link_libraries(<target> <PRIVATE|PUBLIC|INTERFACE> openMeteo::OMClient)
@@ -55,6 +57,13 @@ One needs to  make available to the QML engine the different modules by setting 
 
 You can play with the QML element [here](https://eddytheco.github.io/qmlonline/?example_url=omclient). 
 
+## API reference
+
+You can read the [API reference](https://eddytheco.github.io/OMClient/) here, or generate it yourself like
+```
+cmake -DBUILD_DOCS=ON ../
+cmake --build . --target doxygen_docs
+```
 
 ## Contributing
 
@@ -68,10 +77,3 @@ You can open an issue or request a feature also.
 You can open a PR to the development branch and the CI/CD will take care of the rest.
 Make sure to acknowledge your work, ideas when contributing.
 
-## API reference
-
-You can read the [API reference](https://eddytheco.github.io/OMClient/) here, or generate it yourself like
-```
-cmake -DBUILD_DOCS=ON ../
-cmake --build . --target doxygen_docs
-```
