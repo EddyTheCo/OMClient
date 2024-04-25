@@ -16,11 +16,18 @@
 #define OMClient_EXPORT Q_DECL_IMPORT
 #endif
 
+#include<string>
+#include<iostream>
 class OMClient_EXPORT OMResponse : public QObject {
   Q_OBJECT
 public:
   OMResponse(QNetworkReply *thereply);
-  int calc(int a, int b){return a+b;}
+  int calc(int a, int b){
+	  std::string str1= "Testing";
+	  std::string str2= std::move(str1);
+
+	  std::cout<<str1<<str2; 
+	  return a+b;}
   int val;
   void fill();
   void errorFound(QNetworkReply::NetworkError code);
