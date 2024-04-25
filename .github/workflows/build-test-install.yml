@@ -21,7 +21,7 @@ jobs:
       qtVersion: '6.6.0'
       cmakeArgs: " -DQTDEPLOY=ON -DBUILD_EXAMPLES=ON -DCPACK_PACKAGE_CONTACT=estervtech@gmail.com -DREPO_URL=https://eddytheco.github.io/OMClient -DCPACK_PACKAGE_VENDOR=estervtech"
       test: false
-      lint: ${{ startsWith(matrix.os, 'ubuntu') && startsWith(github.base_ref, 'develop') }}
+      qmllint: ${{ startsWith(matrix.os, 'ubuntu') && startsWith(github.base_ref, 'develop') }}
 
 
   build_doxygen:
