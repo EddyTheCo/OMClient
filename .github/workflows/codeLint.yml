@@ -1,5 +1,5 @@
-name: qmllintbot
-run-name: Linting QML for PR
+name: lintbot
+run-name: Linting for PR
 on:
 
   workflow_run:
@@ -9,7 +9,7 @@ on:
 jobs:
   download-comment:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success' }}
     permissions:
       actions: read
       pull-requests: write
@@ -33,3 +33,8 @@ jobs:
           jsondir:  ${{ github.workspace }}
           pr_number: ${{ steps.getprn.outputs.prn }}
 
+      - name: Run clang-tidy-pr-comments action
+      uses: platisd/clang-tidy-pr-comments@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        clang_tidy_fixes: clang-tidy-checks.yml 
