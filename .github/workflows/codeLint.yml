@@ -32,10 +32,3 @@ jobs:
         with:
           jsondir:  ${{ github.workspace }}
           pr_number: ${{ steps.getprn.outputs.prn }}
-
-      - name: Run clang-tidy-pr-comments action
-        uses: platisd/clang-tidy-pr-comments@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          clang_tidy_fixes: fixes.yml 
-          pull_request_id: ${{ steps.getprn.outputs.prn }} 
