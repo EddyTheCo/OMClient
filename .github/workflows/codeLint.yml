@@ -34,7 +34,7 @@ jobs:
           pr_number: ${{ steps.getprn.outputs.prn }}
 
       - name: Run clang-tidy-pr-comments action
-      uses: platisd/clang-tidy-pr-comments@v1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        clang_tidy_fixes: clang-tidy-checks.yml 
+        uses: platisd/clang-tidy-pr-comments@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          clang_tidy_fixes: clang-tidy-checks.yml
