@@ -20,6 +20,8 @@ class OMClient_EXPORT OMResponse : public QObject {
   Q_OBJECT
 public:
   OMResponse(QNetworkReply *thereply);
+  int calc(int a, int b){return a+b;}
+  int val;
   void fill();
   void errorFound(QNetworkReply::NetworkError code);
 signals:
