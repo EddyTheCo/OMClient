@@ -37,5 +37,5 @@ jobs:
         uses: platisd/clang-tidy-pr-comments@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          clang_tidy_fixes: . 
+          clang_tidy_fixes: fixes.yml 
           pull_request_id: ${{ steps.getprn.outputs.prn }} 
